@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import com.example.a3dmodelsapp.ui.theme.MainColor
 import com.example.a3dmodelsapp.ui.theme.SecondColor
 import com.example.a3dmodelsapp.ui.theme._3DModelsAppTheme
+import com.example.a3dmodelsapp.ui.theme.fontFamily
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,11 +88,12 @@ fun AppHeader() {
             text="AndroidSprint",
             fontSize = 28.sp,
             //color = MainColor,
-            //fontFamily = FontFamily.Serif
+            fontFamily = fontFamily
         )
         Text(
             text="Изучение kOTLIN",
             fontSize = 16.sp,
+            fontFamily = fontFamily
             //color = SecondColor
         )
     }
@@ -109,7 +111,7 @@ fun Buttons() {
              .weight(1f)
              .padding(horizontal = 5.dp),
      ){
-         Text("Раздел 1")
+         Text("Раздел 1", fontFamily = fontFamily)
      }
      Button(
          onClick={},
@@ -118,7 +120,7 @@ fun Buttons() {
              .weight(1f)
              .padding(horizontal = 5.dp)
      ){
-         Text("Раздел 2")
+         Text("Раздел 2", fontFamily = fontFamily)
      }
      Button(
          onClick={},
@@ -127,7 +129,7 @@ fun Buttons() {
              .weight(1f)
              .padding(horizontal = 5.dp)
      ){
-         Text("Раздел 3")
+         Text("Раздел 3", fontFamily = fontFamily)
      }
  }
 }
