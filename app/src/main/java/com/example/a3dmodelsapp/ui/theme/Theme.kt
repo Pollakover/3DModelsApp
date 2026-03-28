@@ -11,6 +11,161 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+
+object CustomTextStyles {
+
+    //Heading 2
+
+    val heading2_regular = TextStyle(
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
+        fontWeight = FontWeight.Normal,
+        fontFamily = fontFamily
+    )
+
+    val heading2_medium = TextStyle(
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
+        fontWeight = FontWeight.Medium,
+        fontFamily = fontFamily
+    )
+
+    val heading2_semi_bold = TextStyle(
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = fontFamily
+    )
+
+    val heading2_bold = TextStyle(
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = fontFamily
+    )
+
+    //Heading 1
+
+    val heading1_regular = TextStyle(
+        fontSize = 30.sp,
+        lineHeight = 38.sp,
+        fontWeight = FontWeight.Normal,
+        fontFamily = fontFamily
+    )
+
+    val heading1_medium = TextStyle(
+        fontSize = 30.sp,
+        lineHeight = 38.sp,
+        fontWeight = FontWeight.Medium,
+        fontFamily = fontFamily
+    )
+
+    val heading1_semi_bold = TextStyle(
+        fontSize = 30.sp,
+        lineHeight = 38.sp,
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = fontFamily
+    )
+
+    val heading1_bold = TextStyle(
+        fontSize = 30.sp,
+        lineHeight = 38.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = fontFamily
+    )
+
+    //Sub heading
+
+    val sub_heading_regular = TextStyle(
+        fontSize = 20.sp,
+        lineHeight = 30.sp,
+        fontWeight = FontWeight.Normal,
+        fontFamily = fontFamily
+    )
+
+    val sub_heading_medium = TextStyle(
+        fontSize = 20.sp,
+        lineHeight = 30.sp,
+        fontWeight = FontWeight.Medium,
+        fontFamily = fontFamily
+    )
+
+    val sub_heading_semi_bold = TextStyle(
+        fontSize = 20.sp,
+        lineHeight = 30.sp,
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = fontFamily
+    )
+
+    val sub_heading_bold = TextStyle(
+        fontSize = 20.sp,
+        lineHeight = 30.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = fontFamily
+    )
+
+    //Body 1
+
+    val body1_regular = TextStyle(
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        fontWeight = FontWeight.Normal,
+        fontFamily = fontFamily
+    )
+
+    val body1_medium = TextStyle(
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        fontWeight = FontWeight.Medium,
+        fontFamily = fontFamily
+    )
+
+    val body1_semi_bold = TextStyle(
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = fontFamily
+    )
+
+    val body1_bold = TextStyle(
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = fontFamily
+    )
+
+    //Body 2
+    val body2_regular = TextStyle(
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        fontWeight = FontWeight.Normal,
+        fontFamily = fontFamily
+    )
+
+    val body2_medium = TextStyle(
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        fontWeight = FontWeight.Medium,
+        fontFamily = fontFamily
+    )
+
+    val body2_semi_bold = TextStyle(
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = fontFamily
+    )
+
+    val body2_bold = TextStyle(
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        fontWeight = FontWeight.Bold,
+        fontFamily = fontFamily
+    )
+}
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
