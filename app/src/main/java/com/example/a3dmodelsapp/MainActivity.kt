@@ -33,46 +33,149 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.a3dmodelsapp.lazyColumn.LazyColumnTest
+import com.example.a3dmodelsapp.screens.catalogue.CardGrid
+import com.example.a3dmodelsapp.screens.catalogue.CatalogueScreen
+import com.example.a3dmodelsapp.screens.info.InfoScreen
+import com.example.a3dmodelsapp.screens.upload.UploadScreen
 import com.example.a3dmodelsapp.ui.theme.MainColor
 import com.example.a3dmodelsapp.ui.theme.SecondColor
 import com.example.a3dmodelsapp.ui.theme._3DModelsAppTheme
 import com.example.a3dmodelsapp.ui.theme.fontFamily
+import com.example.a3dmodelsapp.ui.theme.primary
+import com.example.a3dmodelsapp.ui.theme.secondary
+import com.example.a3dmodelsapp.ui.theme.test
+import com.example.a3dmodelsapp.ui.theme.textColor
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             _3DModelsAppTheme{
                 Scaffold(
-                    content = { padding: PaddingValues ->
-                        Column(
-                            modifier = Modifier
-                                .padding(padding)
-                                //.background(Color.LightGray)
-                                .fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            AppHeader()
-                            Spacer(modifier= Modifier.height(30.dp))
-                            Buttons()
-                            Spacer(modifier= Modifier.height(30.dp))
-                            NewImage()
-                        }
-
+                    topBar = {
+                        TopAppBar(
+                            modifier = Modifier.drawBehind {
+                                val strokeWidth = 4.dp.toPx()
+                                drawLine(
+                                    color = test,
+                                    start = Offset(0f, size.height),
+                                    end = Offset(size.width, size.height),
+                                    strokeWidth = strokeWidth
+                                )
+                            },
+                            colors = TopAppBarColors(
+                                containerColor = secondary,
+                                scrolledContainerColor = secondary,
+                                navigationIconContentColor = textColor,
+                                titleContentColor = primary,
+                                actionIconContentColor = textColor,
+                                subtitleContentColor = textColor
+                            ),
+                            title = {
+                                Text(
+                                    "Каталог моделей",
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = primary,
+                                    fontFamily = fontFamily)
+                            },
+                            actions = {
+                                IconButton(onClick = { /* doSomething() */ }) {
+                                    Icon(
+                                        painterResource(id = R.drawable.upload_24px),
+                                        contentDescription = "",
+                                    )
+                                }
+                                IconButton(onClick = { /* doSomething() */ }) {
+                                    Icon(painterResource(id = R.drawable.search_24px), contentDescription = "")
+                                }
+                            },
+                        )
+                    },
+                    bottomBar = {
+                        BottomAppBar(
+                            modifier = Modifier.drawBehind {
+                                val strokeWidth = 4.dp.toPx()
+                                drawLine(
+                                    color = test,
+                                    start = Offset(0f, 0f),
+                                    end = Offset(size.width, 0f),
+                                    strokeWidth = strokeWidth
+                                )
+                            },
+                            containerColor = secondary,
+                            contentColor = textColor,
+                            content =
+                                {
+                                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier
+                                                .padding(4.dp)
+                                                .clip(RoundedCornerShape(8.dp))
+                                                .clickable { }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.view_cozy_24px),
+                                                contentDescription = "",
+                                                tint = primary
+                                            )
+                                            Text("Каталог",
+                                                color = primary,
+                                                fontFamily = fontFamily,
+                                            )
+                                        }
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier
+                                                .padding(4.dp)
+                                                .clip(RoundedCornerShape(8.dp))
+                                                .clickable { }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.upload_24px),
+                                                contentDescription = "",
+                                            )
+                                            Text(
+                                                "Загрузка",
+                                                fontFamily = fontFamily,
+                                            )
+                                        }
+                                    }
+                                }
+                        )
+                    },
+                ) { innerPadding ->
+                    Column(
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        InfoScreen()
+                        //UploadScreen()
+                        //CardGrid()
                     }
-                )
+                }
             }
 
         }

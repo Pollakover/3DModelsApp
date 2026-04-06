@@ -158,7 +158,8 @@ fun SignUpScreen(navController: NavController) {
                                 }
                                 innerTextField()
                             }
-                        }
+                        },
+                        singleLine = true
                     )
                 }
 
@@ -210,7 +211,8 @@ fun SignUpScreen(navController: NavController) {
                                 }
                                 innerTextField()
                             }
-                        }
+                        },
+                        singleLine = true
                     )
                 }
 
@@ -233,12 +235,12 @@ fun SignUpScreen(navController: NavController) {
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
                                 color = borderColor,
-                                RoundedCornerShape(8.dp)
+                                RoundedCornerShape(50.dp)
                             )
+                            //.clip(RoundedCornerShape(50.dp))
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
                             color = MaterialTheme.colorScheme.onSurface,
@@ -262,7 +264,8 @@ fun SignUpScreen(navController: NavController) {
                                 }
                                 innerTextField()
                             }
-                        }
+                        },
+                        singleLine = true
                     )
                 }
 
@@ -273,7 +276,7 @@ fun SignUpScreen(navController: NavController) {
                             //registerUser(login, password, email, context)
                         }
                     },
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(300.dp),
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(

@@ -164,7 +164,8 @@ fun LoginScreen(navController: NavController) {
                                 }
                                 innerTextField()
                             }
-                        }
+                        },
+                        singleLine = true
                     )
                 }
 
@@ -218,7 +219,8 @@ fun LoginScreen(navController: NavController) {
                                 }
                                 innerTextField()
                             }
-                        }
+                        },
+                        singleLine = true
                     )
                 }
 
