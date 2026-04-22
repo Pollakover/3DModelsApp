@@ -16,10 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.a3dmodelsapp.AppHeader
-import com.example.a3dmodelsapp.Buttons
 import com.example.a3dmodelsapp.MainActivity
-import com.example.a3dmodelsapp.NewImage
 import com.example.a3dmodelsapp.ui.theme._3DModelsAppTheme
 
 class LoginActivity : ComponentActivity() {

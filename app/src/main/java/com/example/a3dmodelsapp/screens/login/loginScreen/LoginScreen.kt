@@ -1,11 +1,11 @@
 package com.example.a3dmodelsapp.screens.login.loginScreen
 
 import android.app.Activity.MODE_PRIVATE
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -30,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -41,13 +39,18 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
-//import retrofit2.Call
-//import retrofit2.Callback
-//import retrofit2.Response
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import androidx.core.content.edit
+import com.example.a3dmodelsapp.MainActivity
 import com.example.a3dmodelsapp.R
+import com.example.a3dmodelsapp.database.ApiClient
+import com.example.a3dmodelsapp.screens.login.AuthResponse
+import com.example.a3dmodelsapp.screens.login.LoginRequest
 import com.example.a3dmodelsapp.screens.login.Screen
 import com.example.a3dmodelsapp.ui.theme.CustomTextStyles
 import com.example.a3dmodelsapp.ui.theme.borderColor
@@ -64,7 +67,6 @@ fun LoginScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            //.background(//color = MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier
@@ -93,13 +95,11 @@ fun LoginScreen(navController: NavController) {
                 Text(
                     text = "Войдите в аккаунт",
                     fontFamily = fontFamily,
-                    ////color = MaterialTheme.colorScheme.onSurface,
                     style = CustomTextStyles.heading1_semi_bold
                 )
                 Text(
                     text = "Заполните поля для входа в систему.",
                     fontFamily = fontFamily,
-                    ////color = MaterialTheme.colorScheme.onSecondary,
                     style = CustomTextStyles.body1_regular
                 )
 
@@ -121,7 +121,6 @@ fun LoginScreen(navController: NavController) {
                     Text(
                         text = "Логин",
                         fontFamily = fontFamily,
-                        ////color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
 
@@ -134,11 +133,12 @@ fun LoginScreen(navController: NavController) {
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
+                            //.clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
                                 color = borderColor,
-                                shape = RoundedCornerShape(8.dp)
+                                CircleShape,
+                                //shape = RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
@@ -158,7 +158,6 @@ fun LoginScreen(navController: NavController) {
                                     Text(
                                         text = "Введите логин",
                                         fontFamily = fontFamily,
-                                        ////color = MaterialTheme.colorScheme.onSecondary,
                                         style = CustomTextStyles.body1_regular
                                     )
                                 }
@@ -176,7 +175,6 @@ fun LoginScreen(navController: NavController) {
                     Text(
                         text = "Пароль",
                         fontFamily = fontFamily,
-                        ////color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
 
@@ -189,11 +187,10 @@ fun LoginScreen(navController: NavController) {
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
                                 color = borderColor,
-                                shape = RoundedCornerShape(8.dp)
+                                CircleShape,
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
@@ -213,7 +210,6 @@ fun LoginScreen(navController: NavController) {
                                     Text(
                                         text = "Введите пароль",
                                         fontFamily = fontFamily,
-                                        ////color = MaterialTheme.colorScheme.onSecondary,
                                         style = CustomTextStyles.body1_regular
                                     )
                                 }
@@ -228,21 +224,18 @@ fun LoginScreen(navController: NavController) {
                 Button(
                     onClick = {
                         if (checkFields(context, login, password)) {
-                            //loginUser(login, password, context)
+                            loginUser(login, password, context)
                         }
                     },
-                    shape = RoundedCornerShape(8.dp),
+                    shape = CircleShape,
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        //containerColor = primary_500,
-                        //contentColor = white
                     )
                 ) {
                     Text(
                         "Войти",
                         fontFamily = fontFamily,
-                        ////color = white,
                         style = CustomTextStyles.body1_medium,
                         modifier = Modifier
                             .padding(5.dp)
@@ -253,7 +246,6 @@ fun LoginScreen(navController: NavController) {
                     Text(
                         text = "У вас нет аккаунта?",
                         fontFamily = fontFamily,
-                        ////color = MaterialTheme.colorScheme.onSecondary,
                         style = CustomTextStyles.body2_regular
                     )
                     Text(
@@ -274,31 +266,31 @@ fun LoginScreen(navController: NavController) {
     }
 }
 
-//private fun loginUser(login: String, password: String, context: Context) {
-//    val call = ApiClient.authApi.login(LoginRequest(login, password))
-//    call.enqueue(object : Callback<AuthResponse> {
-//        override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-//            if (response.isSuccessful) {
-//                // Сохраняем только логин пользователя
-//                saveUserLogin(context, login)
-//
-//                val intent = Intent(context, MainActivity::class.java).apply {
-//                    putExtra("USER_LOGIN", login)
-//                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//                }
-//                context.startActivity(intent)
-//                Toast.makeText(context, "Успешный вход!", Toast.LENGTH_SHORT).show()
-//            } else {
-//                Toast.makeText(context, "Ошибка входа", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//
-//        override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-//            Toast.makeText(context, "Ошибка сети: ${t.message}", Toast.LENGTH_SHORT).show()
-//            Log.d(TAG, "ERROR: ${t.message.toString()}")
-//        }
-//    })
-//}
+private fun loginUser(login: String, password: String, context: Context) {
+    val call = ApiClient.authApi.login(LoginRequest(login, password))
+    call.enqueue(object : Callback<AuthResponse> {
+        override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+            if (response.isSuccessful) {
+                // Сохраняем только логин пользователя
+                saveUserLogin(context, login)
+
+                val intent = Intent(context, MainActivity::class.java).apply {
+                    putExtra("USER_LOGIN", login)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                context.startActivity(intent)
+                Toast.makeText(context, "Успешный вход!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Ошибка входа", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
+            Toast.makeText(context, "Ошибка сети: ${t.message}", Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "ERROR: ${t.message.toString()}")
+        }
+    })
+}
 
 private fun saveUserLogin(context: Context, login: String) {
     context.getSharedPreferences("user_preferences", MODE_PRIVATE).edit {

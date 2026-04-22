@@ -1,4 +1,4 @@
-package com.example.a3dmodelsapp.screens.upload
+package com.example.a3dmodelsapp.screens.update
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -42,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.a3dmodelsapp.R
-import com.example.a3dmodelsapp.screens.update.DropdownMenu
 import com.example.a3dmodelsapp.ui.theme.CustomTextStyles
 import com.example.a3dmodelsapp.ui.theme._3DModelsAppTheme
 import com.example.a3dmodelsapp.ui.theme.backgroundColor
@@ -54,11 +53,10 @@ import com.example.a3dmodelsapp.ui.theme.textColor
 import com.example.a3dmodelsapp.ui.theme.textFieldTip
 
 @Composable
-fun UploadScreen() {
-    var name by remember { mutableStateOf("") }
-    var desc by remember { mutableStateOf("") }
+fun UpdateScreen() {
+    var name by remember { mutableStateOf("Название модели") }
+    var desc by remember { mutableStateOf("Описание") }
     var status by remember { mutableStateOf("Категория 1") }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,43 +64,7 @@ fun UploadScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .clip(shape = RoundedCornerShape(20.dp))
-                .clickable(onClick = {})
-                .fillMaxWidth()
-                .drawBehind {
-                    drawRoundRect(
-                        color = borderColor,
-                        style = Stroke(width = 10f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f) ),
-                        cornerRadius = CornerRadius(20.dp.toPx())
-                    )
-                }
-                //.border(1.dp, borderColor, shape = RoundedCornerShape(8.dp))
-                //.background(secondary)
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(15.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.upload_24px),
-                contentDescription = "",
-                tint = primary,
-                modifier = Modifier.size(50.dp)
-            )
-            Text(
-                text = "Выберите файл для загрузки",
-                style = CustomTextStyles.body1_semi_bold,
-                fontFamily = fontFamily,
-                color = textColor
-            )
-            Text(
-                text = "Поддерживается формат .glb",
-                style = CustomTextStyles.body2_regular,
-                fontFamily = fontFamily,
-                color = textColor
-            )
-        }
+
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -249,6 +211,8 @@ fun UploadScreen() {
             )
         }
 
+
+
         Button(
             onClick = {},
             shape = CircleShape,
@@ -261,12 +225,12 @@ fun UploadScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.upload_24px),
+                    painter = painterResource(R.drawable.save_24px),
                     contentDescription = "",
                     tint = backgroundColor
                 )
                 Text(
-                    "Загрузить",
+                    "Сохранить изменения",
                     fontFamily = fontFamily,
                     style = CustomTextStyles.body1_medium,
                     color = backgroundColor
@@ -276,10 +240,10 @@ fun UploadScreen() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Preview() {
     _3DModelsAppTheme{
-        UploadScreen()
+        UpdateScreen()
     }
 }

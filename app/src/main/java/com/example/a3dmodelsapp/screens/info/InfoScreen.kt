@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.ElevatedCard
@@ -52,7 +53,7 @@ fun InfoScreen() {
     ) {
         ElevatedCard(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(20.dp),
             //elevation = 5.dp,
         ) {
             Box(modifier = Modifier.height(200.dp)) {
@@ -135,7 +136,7 @@ fun InfoScreen() {
 
         Column(
             modifier = Modifier
-                .clip(shape = RoundedCornerShape(8.dp))
+                .clip(shape = RoundedCornerShape(20.dp))
                 .fillMaxWidth()
                 .background(secondary)
         ) {
@@ -167,7 +168,7 @@ fun InfoScreen() {
         }
         Button(
             onClick = {},
-            shape = RoundedCornerShape(8.dp),
+            shape = CircleShape,
             modifier = Modifier
                 .fillMaxWidth()
 
@@ -184,14 +185,14 @@ fun InfoScreen() {
                 Text(
                     "Открыть в режиме 3D-просмотра",
                     fontFamily = fontFamily,
-                    style = CustomTextStyles.body1_regular,
+                    style = CustomTextStyles.body1_medium,
                     color = backgroundColor
                 )
             }
         }
         OutlinedButton(
             onClick = { },
-            shape = RoundedCornerShape(8.dp),
+            shape = CircleShape,
             modifier = Modifier.fillMaxWidth(),
             border = BorderStroke(1.dp, borderColor)
         ) {
@@ -207,14 +208,14 @@ fun InfoScreen() {
                 Text(
                     "Изменить данные",
                     fontFamily = fontFamily,
-                    style = CustomTextStyles.body1_regular,
+                    style = CustomTextStyles.body1_medium,
                     color = textColor
                 )
             }
         }
         OutlinedButton(
             onClick = {},
-            shape = RoundedCornerShape(8.dp),
+            shape = CircleShape,
             modifier = Modifier
                 .fillMaxWidth(),
             border = BorderStroke(1.dp, borderColor)
@@ -231,7 +232,7 @@ fun InfoScreen() {
                 Text(
                     "Разместить на фото",
                     fontFamily = fontFamily,
-                    style = CustomTextStyles.body1_regular,
+                    style = CustomTextStyles.body1_medium,
                     color = textColor
                 )
             }

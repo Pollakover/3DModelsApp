@@ -1,5 +1,6 @@
 package com.example.a3dmodelsapp.ui.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -20,3 +21,8 @@ val textColor = Color(0xFFDEE1E6)
 val borderColor = Color(0xFF565D6C)
 val test = Color(0xFF1F2936)
 val textFieldTip = Color(0xFF959DAD)
+
+val gradient1 = Color(0xFF343D4C)
+val gradient2 = Color(0xFF1E2634)
+
+//val brush: Brush = Color(0xFF171A1F);

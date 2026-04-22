@@ -20,6 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.a3dmodelsapp.screens.info.InfoScreen
+import com.example.a3dmodelsapp.screens.update.UpdateScreen
+import com.example.a3dmodelsapp.screens.viewer.ViewerScreen
 import com.example.a3dmodelsapp.ui.theme._3DModelsAppTheme
 
 class NewActivity : ComponentActivity() {
@@ -35,7 +38,10 @@ class NewActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .fillMaxSize()
                     ) {
-                        NewCheckbox()
+                        //UpdateScreen()
+                        //ViewerScreen()
+                        //InfoScreen()
+                        //NewCheckbox()
                     }
                 }
             }

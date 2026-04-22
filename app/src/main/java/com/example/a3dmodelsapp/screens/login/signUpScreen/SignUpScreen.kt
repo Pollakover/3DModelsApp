@@ -1,6 +1,7 @@
 package com.example.a3dmodelsapp.screens.login.signUpScreen
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
@@ -41,15 +43,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.a3dmodelsapp.R
+import com.example.a3dmodelsapp.database.ApiClient
+import com.example.a3dmodelsapp.screens.login.AuthResponse
+import com.example.a3dmodelsapp.screens.login.RegisterRequest
 import com.example.a3dmodelsapp.screens.login.Screen
 import com.example.a3dmodelsapp.ui.theme.CustomTextStyles
 import com.example.a3dmodelsapp.ui.theme.borderColor
 import com.example.a3dmodelsapp.ui.theme.fontFamily
 import com.example.a3dmodelsapp.ui.theme.primary
 
-//import retrofit2.Call
-//import retrofit2.Callback
-//import retrofit2.Response
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun SignUpScreen(navController: NavController) {
@@ -62,7 +67,6 @@ fun SignUpScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            //.background(//color = MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier
@@ -91,12 +95,10 @@ fun SignUpScreen(navController: NavController) {
 
                 Text(
                     text = "Создайте аккаунт",
-                    //color = MaterialTheme.colorScheme.onSurface,
                     style = CustomTextStyles.heading1_semi_bold
                 )
                 Text(
                     text = "Заполните поля для регистрации.",
-                    //color = MaterialTheme.colorScheme.onSecondary,
                     style = CustomTextStyles.body1_regular,
                 )
 
@@ -116,7 +118,6 @@ fun SignUpScreen(navController: NavController) {
                 ) {
                     Text(
                         text = "Логин",
-                        ////color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
 
@@ -129,11 +130,10 @@ fun SignUpScreen(navController: NavController) {
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
                                 color = borderColor,
-                                shape = RoundedCornerShape(8.dp)
+                                CircleShape,
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
@@ -152,7 +152,6 @@ fun SignUpScreen(navController: NavController) {
                                 if (login.isEmpty()) {
                                     Text(
                                         text = "Введите логин",
-                                        ////color = MaterialTheme.colorScheme.onSecondary,
                                         style = CustomTextStyles.body1_regular
                                     )
                                 }
@@ -169,7 +168,6 @@ fun SignUpScreen(navController: NavController) {
                 ) {
                     Text(
                         text = "E-mail",
-                        ////color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
 
@@ -182,11 +180,10 @@ fun SignUpScreen(navController: NavController) {
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
                                 color = borderColor,
-                                RoundedCornerShape(8.dp)
+                                CircleShape
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
@@ -205,7 +202,6 @@ fun SignUpScreen(navController: NavController) {
                                 if (email.isEmpty()) {
                                     Text(
                                         text = "Введите e-mail",
-                                        ////color = MaterialTheme.colorScheme.onSecondary,
                                         style = CustomTextStyles.body1_regular
                                     )
                                 }
@@ -222,7 +218,6 @@ fun SignUpScreen(navController: NavController) {
                 ) {
                     Text(
                         text = "Пароль",
-                        ////color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
 
@@ -238,9 +233,8 @@ fun SignUpScreen(navController: NavController) {
                             .border(
                                 1.dp,
                                 color = borderColor,
-                                RoundedCornerShape(50.dp)
+                                CircleShape
                             )
-                            //.clip(RoundedCornerShape(50.dp))
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
                             color = MaterialTheme.colorScheme.onSurface,
@@ -258,7 +252,6 @@ fun SignUpScreen(navController: NavController) {
                                 if (password.isEmpty()) {
                                     Text(
                                         text = "Придумайте пароль",
-                                        ////color = MaterialTheme.colorScheme.onSecondary,
                                         style = CustomTextStyles.body1_regular
                                     )
                                 }
@@ -273,29 +266,24 @@ fun SignUpScreen(navController: NavController) {
                 Button(
                     onClick = {
                         if (checkFields(context, login, email, password)) {
-                            //registerUser(login, password, email, context)
+                            registerUser(login, password, email, context)
                         }
                     },
-                    shape = RoundedCornerShape(300.dp),
+                    shape = CircleShape,
                     modifier = Modifier
                         .fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        //containerColor = primary_500,
-                        //contentColor = white
-                    )
                 ) {
                     Text(
                         "Зарегистрироваться",
-                        ////color = white,
                         style = CustomTextStyles.body1_medium,
-                        modifier = Modifier.padding(5.dp)
+                        modifier = Modifier.padding(5.dp),
+                        fontFamily = fontFamily
                     )
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         text = "У вас уже есть аккаунт?",
-                        ////color = MaterialTheme.colorScheme.onSecondary,
                         style = CustomTextStyles.body2_regular
                     )
                     Text(
@@ -315,24 +303,24 @@ fun SignUpScreen(navController: NavController) {
     }
 }
 
-//const val TAG = "RegisterUser"
-//private fun registerUser(login: String, password: String, email: String, context: Context) {
-//    val call = ApiClient.authApi.register(RegisterRequest(login, password, email))
-//    call.enqueue(object : Callback<AuthResponse> {
-//        override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-//            if (response.isSuccessful) {
-//                Toast.makeText(context, "Успешная регистрация", Toast.LENGTH_SHORT).show()
-//            } else {
-//                Toast.makeText(context, "Ошибка регистрации", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//
-//        override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-//            Toast.makeText(context, "Ошибка: ${t.message}", Toast.LENGTH_SHORT).show()
-//            Log.d(TAG, "ERROR: ${t.message.toString()}")
-//        }
-//    })
-//}
+const val TAG = "RegisterUser"
+private fun registerUser(login: String, password: String, email: String, context: Context) {
+    val call = ApiClient.authApi.register(RegisterRequest(login, password, email))
+    call.enqueue(object : Callback<AuthResponse> {
+        override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+            if (response.isSuccessful) {
+                Toast.makeText(context, "Успешная регистрация", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Ошибка регистрации", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
+            Toast.makeText(context, "Ошибка: ${t.message}", Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "ERROR: ${t.message.toString()}")
+        }
+    })
+}
 
 @Preview(showBackground = true)
 @Composable
