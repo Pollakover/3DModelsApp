@@ -1,4 +1,4 @@
-package com.example.a3dmodelsapp.screens.update
+package com.example.a3dmodelsapp.screens.modelInteractions.update
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

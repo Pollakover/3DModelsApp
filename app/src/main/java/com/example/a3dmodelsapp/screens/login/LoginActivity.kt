@@ -24,7 +24,6 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val sharedPreferences = getSharedPreferences("user_preferences", MODE_PRIVATE)
-        val isDarkMode = sharedPreferences.getBoolean("dark_mode", false)
         val savedLogin = sharedPreferences.getString("user_login", null)
 
         if (!savedLogin.isNullOrEmpty()) {

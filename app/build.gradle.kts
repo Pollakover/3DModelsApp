@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -69,4 +70,28 @@ dependencies {
     implementation(libs.okhttp)
     implementation (libs.converter.gson)
     implementation(libs.coil.compose)
+
+
+//    implementation("io.github.jan-tennert.supabase:supabase-kt:3.6.0")
+//
+//    implementation("io.github.jan-tennert.supabase:postgrest-kt:3.6.0")
+//    implementation("io.github.jan-tennert.supabase:storage-kt:3.6.0")
+//    implementation("io.github.jan-tennert.supabase:auth-kt:3.6.0")
+
+//    implementation("io.github.jan-tennert.supabase:storage-kt:3.5.0")
+//    //implementation("io.ktor:ktor-client-[engine]:VERSION")
+//    implementation("io.ktor:ktor-client-android:3.5.0")
+
+
+    implementation("io.github.jan-tennert.supabase:supabase-kt:3.5.0")
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:3.5.0")
+    implementation("io.github.jan-tennert.supabase:storage-kt:3.5.0")
+    implementation("io.github.jan-tennert.supabase:auth-kt:3.5.0")
+
+    implementation("io.ktor:ktor-client-android:3.5.0")
+    implementation("io.ktor:ktor-client-content-negotiation:3.5.0")
+    implementation("io.ktor:ktor-client-logging:3.5.0")
+    implementation("io.ktor:ktor-client-auth:3.5.0")
+
+
 }

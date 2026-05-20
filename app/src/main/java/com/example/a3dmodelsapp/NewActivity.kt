@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -20,9 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.a3dmodelsapp.screens.info.InfoScreen
-import com.example.a3dmodelsapp.screens.update.UpdateScreen
-import com.example.a3dmodelsapp.screens.viewer.ViewerScreen
 import com.example.a3dmodelsapp.ui.theme._3DModelsAppTheme
 
 class NewActivity : ComponentActivity() {

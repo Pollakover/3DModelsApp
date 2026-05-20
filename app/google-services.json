@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1016618552014",
+    "project_id": "models-app-3d",
+    "storage_bucket": "models-app-3d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1016618552014:android:ec0274fdacd20f98c8de9f",
+        "android_client_info": {
+          "package_name": "com.example.a3dmodelsapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9ajQj-NADfbW3IpLPH4HbXAa20Uw-_qo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

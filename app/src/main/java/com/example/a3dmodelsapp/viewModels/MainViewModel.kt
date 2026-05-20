@@ -28,4 +28,6 @@ class MainViewModel(
     private val userLogin: String
 ) : ViewModel() {
 
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading
 }
