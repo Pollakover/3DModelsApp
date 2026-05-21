@@ -36,6 +36,7 @@ import com.example.a3dmodelsapp.ui.theme.fontFamily
 import com.example.a3dmodelsapp.ui.theme.secondary
 import com.example.a3dmodelsapp.ui.theme.textColor
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
@@ -81,11 +82,11 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
                     }
                 },
                 title = {
-                    androidx.compose.material3.Text(
+                    Text(
                         text = "Информация о модели",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = CustomTextStyles.heading2_regular,
+                        style = CustomTextStyles.sub_heading_regular,
                         fontFamily = fontFamily
                     )
                 },
@@ -107,6 +108,7 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
             ) {
                 Box(modifier = Modifier.height(200.dp)) {
 
@@ -179,12 +181,12 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
 
                         Badge(
                             containerColor = secondary,
-                            contentColor = textColor
+                            contentColor = textColor,
+                            modifier = Modifier.height(32.dp)
                         ) {
-
                             Text(
                                 "Категория $index",
-                                modifier = Modifier.padding(5.dp),
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                                 style = CustomTextStyles.body2_regular,
                                 color = textColor,
                                 fontFamily = fontFamily
@@ -210,9 +212,9 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
 
                 Column(
                     modifier = Modifier
-                        .padding(10.dp)
+                        .padding(16.dp)  // ← было 10.dp, увеличил для воздушности
                         .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp)  // ← было 10.dp
                 ) {
 
                     Text(
@@ -233,7 +235,7 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
 
                             ModelInfo(
                                 painter = painterResource(R.drawable.description_24px),
-                                text = "Формат: GLTF"
+                                text = "Формат: GLB"
                             )
 
                             ModelInfo(
@@ -265,6 +267,7 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
                     Icon(
                         painter = painterResource(R.drawable.visibility_24px),
                         contentDescription = "",
+                        modifier = Modifier.size(20.dp),  // ← оптимальный размер для иконок в кнопках
                         tint = backgroundColor
                     )
 
@@ -272,7 +275,9 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
                         "Открыть в режиме 3D-просмотра",
                         fontFamily = fontFamily,
                         style = CustomTextStyles.body1_medium,
-                        color = backgroundColor
+                        color = backgroundColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
             }
@@ -292,6 +297,7 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
                     Icon(
                         painter = painterResource(R.drawable.edit_24px),
                         contentDescription = "",
+                        modifier = Modifier.size(20.dp),
                         tint = textColor
                     )
 
@@ -313,18 +319,19 @@ fun ModelInfo(
     text: String
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),  // ← увеличил отступ
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             painter = painter,
             contentDescription = "",
-            Modifier.size(15.dp)
+            modifier = Modifier.size(18.dp),  // ← было 15.dp, увеличил до 18.dp
+            tint = textColor
         )
         Text(
             text,
             fontFamily = fontFamily,
-            style = CustomTextStyles.body2_regular,
+            style = CustomTextStyles.body2_regular,  // 12.sp
             color = textColor
         )
     }

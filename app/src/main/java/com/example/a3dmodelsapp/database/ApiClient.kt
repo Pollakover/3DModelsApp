@@ -13,4 +13,6 @@ object ApiClient {
         .build()
 
     val authApi : AuthApi = retrofit.create(AuthApi::class.java)
+
+    val fileApi: FileApi = retrofit.create(FileApi::class.java)
 }

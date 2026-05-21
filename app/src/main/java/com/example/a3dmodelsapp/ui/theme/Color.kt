@@ -26,4 +26,8 @@ val textFieldTip = Color(0xFF959DAD)
 val gradient1 = Color(0xFF343D4C)
 val gradient2 = Color(0xFF1E2634)
 
-//val brush: Brush = Color(0xFF171A1F);
+val success_500 = Color(0xFF12B76A)
+
+val warning_500 = Color(0xFFF79009)
+
+val error_500 = Color(0xFFF04438)

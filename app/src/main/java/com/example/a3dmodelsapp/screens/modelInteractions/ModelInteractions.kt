@@ -25,20 +25,14 @@ fun ModelInteractionsNavigation(rootNavController: NavController) {
         startDestination = "info",
     ) {
         composable("info") {
-            _3DModelsAppTheme{
-                InfoScreen(rootNavController, MINavController)
-            }
+            InfoScreen(rootNavController, MINavController)
         }
         composable("update") {
-            _3DModelsAppTheme{
-                UpdateScreen(MINavController)
-            }
+            UpdateScreen(MINavController)
         }
 
         composable("viewer") {
-            _3DModelsAppTheme{
-                ViewerScreen(MINavController)
-            }
+            ViewerScreen(MINavController)
         }
     }
 }

@@ -51,6 +51,7 @@ import com.example.a3dmodelsapp.ui.theme.fontFamily
 import com.example.a3dmodelsapp.ui.theme.primary
 import com.example.a3dmodelsapp.ui.theme.secondary
 import com.example.a3dmodelsapp.ui.theme.textColor
+import com.example.a3dmodelsapp.ui.theme.warning_500
 
 //@Preview
 @Composable
@@ -156,7 +157,7 @@ fun ExitDialog(state: MutableState<Boolean>) {
                         Icon(
                             painter = painterResource(id = R.drawable.logout_24px),
                             contentDescription = "",
-                            tint = Color(0xFFF79009),
+                            tint = warning_500,
                             modifier = Modifier.size(30.dp)
                         )
                         Text(

@@ -92,7 +92,7 @@ fun UpdateScreen(MINavController: NavController) {
                         text = "Редактирование",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = CustomTextStyles.heading2_regular,
+                        style = CustomTextStyles.sub_heading_regular,
                         fontFamily = fontFamily
                     )
                 },
@@ -239,11 +239,15 @@ fun UpdateScreen(MINavController: NavController) {
                         items(21) {index ->
                             Badge(
                                 containerColor = secondary,
-                                contentColor = textColor
+                                contentColor = textColor,
+                                modifier = Modifier.height(32.dp)
                             ) {
                                 Text(
                                     "Категория $index",
-                                    modifier = Modifier.padding(5.dp),
+                                    modifier = Modifier.padding(
+                                        horizontal = 12.dp,
+                                        vertical = 6.dp
+                                    ),
                                     style = CustomTextStyles.body2_regular,
                                     color = textColor,
                                     fontFamily = fontFamily

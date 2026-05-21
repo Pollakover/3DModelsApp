@@ -1,5 +1,6 @@
 package com.example.a3dmodelsapp
 
+import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -44,6 +45,10 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -64,9 +69,16 @@ class MainActivity : ComponentActivity() {
             putString("user_login", userLogin)
         }
 
-
-
         setContent {
+            val view = LocalView.current
+
+            LaunchedEffect(Unit) {
+                val window = (view.context as Activity).window
+
+                window.navigationBarColor =
+                    secondary.toArgb()
+            }
+
             val mainViewModel: MainViewModel = viewModel(
                 factory = object : ViewModelProvider.Factory {
                     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -74,15 +86,12 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             )
-
-            _3DModelsAppTheme{
-                setContent {
-                    RootNavigation(
-                        mainViewModel,
-                        sharedPreferences,
-                        userLogin
-                    )
-                }
+            _3DModelsAppTheme() {
+                RootNavigation(
+                    mainViewModel,
+                    sharedPreferences,
+                    userLogin
+                )
             }
         }
     }
@@ -97,8 +106,6 @@ fun MainScreen(
     userLogin: String
 ) {
     val navController = rememberNavController()
-    //val startDestination = "catalogue"
-    //var selectedDestination by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
     val scope = rememberCoroutineScope()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
@@ -145,7 +152,7 @@ fun MainScreen(
                         text = topBarText,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = CustomTextStyles.heading2_regular,
+                        style = CustomTextStyles.sub_heading_regular,
                         fontFamily = fontFamily
                     )
                 },
@@ -209,14 +216,12 @@ fun MainScreen(
                         Icon(
                             painter = painterResource(R.drawable.view_cozy_24px),
                             contentDescription = "",
-                            //tint = if(currentRoute == "catalogue") primary else textColor
                         )
                     },
                     label = {
                         Text(
                             "Каталог",
                             fontFamily = fontFamily,
-                            //color = if(currentRoute == "catalogue") primary else textColor
                         )
                     }
                 )
@@ -241,14 +246,12 @@ fun MainScreen(
                         Icon(
                             painter = painterResource(R.drawable.upload_24px),
                             contentDescription = "",
-                            //tint = if(currentRoute == "upload") primary else textColor
                         )
                     },
                     label = {
                         Text(
                             "Загрузка",
                             fontFamily = fontFamily,
-                            //color = if(currentRoute == "upload") primary else textColor
                         )
                     }
                 )
@@ -273,14 +276,12 @@ fun MainScreen(
                         Icon(
                             painter = painterResource(R.drawable.account_box_24px),
                             contentDescription = "",
-                            //tint = if(currentRoute == "profile") primary else textColor
                         )
                     },
                     label = {
                         Text(
                             "Профиль",
                             fontFamily = fontFamily,
-                            //color = if(currentRoute == "profile") primary else textColor
                         )
                     }
                 )
@@ -300,7 +301,7 @@ fun MainScreen(
                     },
                 )
             }
-            composable("upload") { UploadScreen() }
+            composable("upload") { UploadScreen(userLogin) }
             composable("profile") { UserInfoScreen(userLogin) }
         }
     }
@@ -320,24 +321,17 @@ fun RootNavigation(
         startDestination = "main"
     ) {
 
-        // Экран со Scaffold
         composable("main") {
-            _3DModelsAppTheme{
-                MainScreen(
-                    rootNavController = rootNavController,
-                    mainViewModel = mainViewModel,
-                    sharedPreferences = sharedPreferences,
-                    userLogin = userLogin
-                )
-            }
-
+            MainScreen(
+                rootNavController = rootNavController,
+                mainViewModel = mainViewModel,
+                sharedPreferences = sharedPreferences,
+                userLogin = userLogin
+            )
         }
 
-        // Fullscreen экран 1
         composable("info") {
-            _3DModelsAppTheme{
-                ModelInteractionsNavigation(rootNavController)
-            }
+            ModelInteractionsNavigation(rootNavController)
         }
     }
 }

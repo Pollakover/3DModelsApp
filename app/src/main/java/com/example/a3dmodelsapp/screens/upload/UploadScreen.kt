@@ -45,7 +45,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.a3dmodelsapp.R
-import com.example.a3dmodelsapp.database.SupabaseClient
 import com.example.a3dmodelsapp.screens.modelInteractions.update.DropdownMenu
 import com.example.a3dmodelsapp.ui.theme.CustomTextStyles
 import com.example.a3dmodelsapp.ui.theme.backgroundColor
@@ -55,7 +54,6 @@ import com.example.a3dmodelsapp.ui.theme.primary
 import com.example.a3dmodelsapp.ui.theme.secondary
 import com.example.a3dmodelsapp.ui.theme.textColor
 import com.example.a3dmodelsapp.ui.theme.textFieldTip
-import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.launch
 import android.net.Uri
 import android.widget.Toast
@@ -63,27 +61,18 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import io.github.jan.supabase.storage.UploadStatus
-import io.github.jan.supabase.storage.uploadAsFlow
-import java.io.ByteArrayOutputStream
-import java.io.File
-import io.github.jan.supabase.storage.UploadData
-import io.ktor.utils.io.jvm.javaio.toByteReadChannel
-import kotlinx.coroutines.Dispatchers
+import androidx.compose.ui.text.style.TextOverflow
+import com.example.a3dmodelsapp.database.ApiClient
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Protocol
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.asRequestBody
-import java.util.concurrent.TimeUnit
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import coil.compose.AsyncImage
+import com.example.a3dmodelsapp.ui.theme.success_500
 
 @Composable
-fun UploadScreen() {
-
-    val url = SupabaseClient.client.storage.from("3d-models").publicUrl("BOX.glb")
-    Log.d("TEST", url)
-
+fun UploadScreen(userLogin: String) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -130,14 +119,23 @@ fun UploadScreen() {
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
 
-        // SELECT FILE
+        AsyncImage(
+            model = "http://192.168.1.6:8080/files/u809.png",
+            contentDescription = "image",
+            modifier = Modifier
+                .size(80.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(R.drawable.icon),
+            error = painterResource(R.drawable.icon)
+        )
+
         Column(
             modifier = Modifier
                 .clip(shape = RoundedCornerShape(20.dp))
                 .clickable {
 
                     launcher.launch("*/*")
-                    // Можно:
                     // launcher.launch("model/gltf-binary")
                 }
                 .fillMaxWidth()
@@ -187,15 +185,69 @@ fun UploadScreen() {
             Text(
                 text =
                     if (selectedUri == null)
-                        ".glb / .gltf"
+                        "Формат файла должен быть .glb "
                     else
                         selectedUri.toString(),
 
                 style = CustomTextStyles.body2_regular,
                 fontFamily = fontFamily,
-                color = textColor
+                color = textColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
         }
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Text(
+                text = "Название",
+                fontFamily = fontFamily,
+                style = CustomTextStyles.body2_medium
+            )
+
+            BasicTextField(
+                value = name,
+                onValueChange = { newText ->
+                    if (newText.length <= 200) {
+                        name = newText
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        1.dp,
+                        color = borderColor,
+                        CircleShape,
+                    )
+                    .padding(14.dp, 10.dp, 14.dp, 10.dp),
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 16.sp,
+                        lineHeight = 24.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = fontFamily
+                    ),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
+                decorationBox = { innerTextField ->
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        if (name.isEmpty()) {
+                            Text(
+                                text = "Введите название вашей 3D-модели",
+                                fontFamily = fontFamily,
+                                color = textFieldTip,
+                                style = CustomTextStyles.body1_regular
+                            )
+                        }
+                        innerTextField()
+                    }
+                },
+            )
+        }
+
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -203,7 +255,6 @@ fun UploadScreen() {
             Text(
                 text = "Описание",
                 fontFamily = fontFamily,
-                ////color = MaterialTheme.colorScheme.onBackground,
                 style = CustomTextStyles.body2_medium
             )
 
@@ -217,11 +268,9 @@ fun UploadScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    //.clip(RoundedCornerShape(8.dp))
                     .border(
                         1.dp,
                         color = borderColor,
-                        //CircleShape,
                         shape = RoundedCornerShape(20.dp)
                     )
                     .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -236,7 +285,6 @@ fun UploadScreen() {
                 decorationBox = { innerTextField ->
                     Box(
                         modifier = Modifier.fillMaxWidth(),
-                        //contentAlignment = Alignment.CenterStart
                     ) {
                         if (desc.isEmpty()) {
                             Text(
@@ -274,11 +322,12 @@ fun UploadScreen() {
                     items(21) {index ->
                         Badge(
                             containerColor = secondary,
-                            contentColor = textColor
+                            contentColor = textColor,
+                            modifier = Modifier.height(32.dp)
                         ) {
                             Text(
                                 "Категория $index",
-                                modifier = Modifier.padding(5.dp),
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                                 style = CustomTextStyles.body2_regular,
                                 color = textColor,
                                 fontFamily = fontFamily
@@ -291,67 +340,60 @@ fun UploadScreen() {
 
         Button(
             onClick = {
-
                 if (selectedUri == null) {
-
                     Toast.makeText(
                         context,
-                        "Выберите файл",
+                        "Файл не выбран",
                         Toast.LENGTH_SHORT
                     ).show()
-
                     return@Button
                 }
+                else {
+                    if (name.isEmpty() || desc.isEmpty()) {
+                        Toast.makeText(
+                            context,
+                            "Заполните все поля",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@Button
+                    }
 
-                scope.launch(Dispatchers.IO) {
+                }
+
+
+
+                scope.launch {
+
+                    isUploading = true
+
                     try {
 
-                        isUploading = true
+                        val result = uploadModel(
+                            context = context,
+                            uri = selectedUri!!,
+                            name = name,
+                            description = desc,
+                            userLogin = userLogin
+                        )
 
-                        val bytes = context.contentResolver
-                            .openInputStream(selectedUri!!)
-                            ?.readBytes()
+                        uploadedUrl = result ?: ""
 
-                        if (bytes != null) {
-
-                            val fileName = "${System.currentTimeMillis()}.png"
-
-                            Log.d("FILE_SIZE", "${bytes.size / 1024} KB")
-                            Log.d("Bytes", bytes.toString())
-
-//                            val url = uploadFile(
-//                                fileName = fileName,
-//                                uri = selectedUri!!,
-//                                context = context
-//                            )
-
-                            uploadFileOkHttp(context, selectedUri!!, fileName)
-
-                            uploadedUrl = url
-
-                            Log.d("SUPABASE", url)
-
-//                            Toast.makeText(
-//                                context,
-//                                "Файл загружен",
-//                                Toast.LENGTH_LONG
-//                            ).show()
-                        }
+                        Toast.makeText(
+                            context,
+                            "Файл загружен",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
                     } catch (e: Exception) {
-                        Log.e("UPLOAD_ERROR", e.message, e)
-                        e.printStackTrace()
 
-//                        Toast.makeText(
-//                            context,
-//                            "Ошибка загрузки",
-//                            Toast.LENGTH_LONG
-//                        ).show()
-
-                    } finally {
-
-                        isUploading = false
+                        Toast.makeText(
+                            context,
+                            e.message,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
+
+                    isUploading = false
                 }
             },
 
@@ -387,97 +429,62 @@ fun UploadScreen() {
                 )
             }
         }
-
-        // URL
-        if (uploadedUrl.isNotEmpty()) {
-
-            Text(
-                text = uploadedUrl,
-                color = primary
-            )
-        }
     }
 }
 
-suspend fun uploadFile(
+suspend fun uploadModel(
+
     context: Context,
     uri: Uri,
-    fileName: String
-): String {
 
-    val bucket = SupabaseClient.client.storage.from("3d-models")
+    name: String,
+    description: String,
+    userLogin: String,
 
-    val file = uriToFile(context, uri, fileName)
+): String? {
 
-    val uploadData = UploadData(
-        stream = file.inputStream().toByteReadChannel(),
-        size = file.length()
-    )
+    val contentResolver = context.contentResolver
 
-    bucket.uploadAsFlow(
-        path = fileName,
-        data = uploadData
-    ).collect { status ->
+    val inputStream =
+        contentResolver.openInputStream(uri)
 
-        when (status) {
+    val fileBytes =
+        inputStream?.readBytes() ?: return null
 
-            is UploadStatus.Progress -> {
-                val percent =
-                    status.totalBytesSend.toFloat() /
-                            status.contentLength.toFloat() * 100f
+    val requestFile =
+        fileBytes.toRequestBody(
+            "application/octet-stream".toMediaType()
+        )
 
-                Log.d("UPLOAD", "Progress: $percent%")
-            }
+    val filePart =
+        MultipartBody.Part.createFormData(
+            "file",
+            "model.glb",
+            requestFile
+        )
 
-            is UploadStatus.Success -> {
-                Log.d("UPLOAD", "SUCCESS")
-            }
-        }
+    val nameBody =
+        name.toRequestBody("text/plain".toMediaType())
+
+    val descBody =
+        description.toRequestBody("text/plain".toMediaType())
+
+    val userLoginBody =
+        userLogin.toRequestBody("text/plain".toMediaType())
+
+    val response =
+        ApiClient.fileApi.uploadFile(
+            filePart,
+            nameBody,
+            descBody,
+            userLoginBody
+        )
+
+    if (response.isSuccessful) {
+
+        return response.body()?.fileUrl
     }
 
-    return bucket.publicUrl(fileName)
+    return null
 }
 
-
-fun uriToFile(context: Context, uri: Uri, fileName: String): File {
-    val file = File(context.cacheDir, fileName)
-
-    context.contentResolver.openInputStream(uri)?.use { input ->
-        file.outputStream().use { output ->
-            input.copyTo(output)
-        }
-    }
-
-    return file
-}
-
-val client = OkHttpClient.Builder()
-    .connectTimeout(60, TimeUnit.SECONDS)
-    .writeTimeout(5, TimeUnit.MINUTES)
-    .readTimeout(60, TimeUnit.SECONDS)
-    .protocols(listOf(Protocol.HTTP_1_1))
-    .build()
-
-fun uploadFileOkHttp(
-    context: Context,
-    uri: Uri,
-    fileName: String
-) {
-
-    val file = uriToFile(context, uri, fileName)
-
-    val requestBody = file.asRequestBody("image/png".toMediaType())
-
-    val request = Request.Builder()
-        .url("https://piggzxpuluznhahqkccp.supabase.co/storage/v1/object/3d-models/$fileName")
-        .addHeader("apikey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpZ2d6eHB1bHV6bmhhaHFrY2NwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwOTExMzYsImV4cCI6MjA5NDY2NzEzNn0.fMRGRhhOr_0wBI-62STgGD5-jczRPrJNh8xa4dYQ6oM")
-        .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpZ2d6eHB1bHV6bmhhaHFrY2NwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwOTExMzYsImV4cCI6MjA5NDY2NzEzNn0.fMRGRhhOr_0wBI-62STgGD5-jczRPrJNh8xa4dYQ6oM")
-        .put(requestBody)
-        .build()
-
-    client.newCall(request).execute().use { response ->
-        if (!response.isSuccessful) {
-            throw Exception("Upload failed: ${response.code}")
-        }
-    }
-}

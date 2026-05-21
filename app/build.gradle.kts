@@ -11,6 +11,22 @@ android {
         version = release(36)
     }
 
+    packaging {
+
+        resources {
+
+            excludes += "META-INF/INDEX.LIST"
+
+            excludes += "META-INF/io.netty.versions.properties"
+
+            excludes += "META-INF/DEPENDENCIES"
+
+            excludes += "META-INF/LICENSE*"
+
+            excludes += "META-INF/NOTICE*"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.example.a3dmodelsapp"
         minSdk = 29
@@ -71,6 +87,8 @@ dependencies {
     implementation (libs.converter.gson)
     implementation(libs.coil.compose)
 
+    implementation("androidx.activity:activity-compose:1.13.0")
+
 
 //    implementation("io.github.jan-tennert.supabase:supabase-kt:3.6.0")
 //
@@ -83,15 +101,15 @@ dependencies {
 //    implementation("io.ktor:ktor-client-android:3.5.0")
 
 
-    implementation("io.github.jan-tennert.supabase:supabase-kt:3.5.0")
-    implementation("io.github.jan-tennert.supabase:postgrest-kt:3.5.0")
-    implementation("io.github.jan-tennert.supabase:storage-kt:3.5.0")
-    implementation("io.github.jan-tennert.supabase:auth-kt:3.5.0")
-
-    implementation("io.ktor:ktor-client-android:3.5.0")
-    implementation("io.ktor:ktor-client-content-negotiation:3.5.0")
-    implementation("io.ktor:ktor-client-logging:3.5.0")
-    implementation("io.ktor:ktor-client-auth:3.5.0")
+//    implementation("io.github.jan-tennert.supabase:supabase-kt:3.5.0")
+//    implementation("io.github.jan-tennert.supabase:postgrest-kt:3.5.0")
+//    implementation("io.github.jan-tennert.supabase:storage-kt:3.5.0")
+//    implementation("io.github.jan-tennert.supabase:auth-kt:3.5.0")
+//
+//    implementation("io.ktor:ktor-client-android:3.5.0")
+//    implementation("io.ktor:ktor-client-content-negotiation:3.5.0")
+//    implementation("io.ktor:ktor-client-logging:3.5.0")
+//    implementation("io.ktor:ktor-client-auth:3.5.0")
 
 
 }
