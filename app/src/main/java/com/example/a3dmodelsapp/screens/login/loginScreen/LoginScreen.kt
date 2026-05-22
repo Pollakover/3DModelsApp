@@ -95,7 +95,7 @@ fun LoginScreen(navController: NavController) {
                 Text(
                     text = "Войдите в аккаунт",
                     fontFamily = fontFamily,
-                    style = CustomTextStyles.heading1_semi_bold
+                    style = CustomTextStyles.heading_large
                 )
                 Text(
                     text = "Заполните поля для входа в систему.",

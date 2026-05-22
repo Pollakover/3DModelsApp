@@ -86,7 +86,7 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
                         text = "Информация о модели",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = CustomTextStyles.sub_heading_regular,
+                        style = CustomTextStyles.heading_small,
                         fontFamily = fontFamily
                     )
                 },

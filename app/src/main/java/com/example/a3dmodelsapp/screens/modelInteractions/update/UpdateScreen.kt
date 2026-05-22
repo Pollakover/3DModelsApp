@@ -92,7 +92,7 @@ fun UpdateScreen(MINavController: NavController) {
                         text = "Редактирование",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = CustomTextStyles.sub_heading_regular,
+                        style = CustomTextStyles.heading_small,
                         fontFamily = fontFamily
                     )
                 },

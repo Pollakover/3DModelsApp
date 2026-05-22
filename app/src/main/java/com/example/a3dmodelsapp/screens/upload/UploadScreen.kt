@@ -120,11 +120,11 @@ fun UploadScreen(userLogin: String) {
     ) {
 
         AsyncImage(
-            model = "http://192.168.1.6:8080/files/u809.png",
+            model = "http://192.168.1.6:8080/files/rds.png",
             contentDescription = "image",
             modifier = Modifier
-                .size(80.dp)
-                .clip(RoundedCornerShape(8.dp)),
+                .size(500.dp)
+                .clip(RoundedCornerShape(20.dp)),
             contentScale = ContentScale.Crop,
             placeholder = painterResource(R.drawable.icon),
             error = painterResource(R.drawable.icon)
@@ -224,8 +224,8 @@ fun UploadScreen(userLogin: String) {
                     .padding(14.dp, 10.dp, 14.dp, 10.dp),
                     textStyle = TextStyle(
                         color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = 16.sp,
-                        lineHeight = 24.sp,
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = fontFamily
                     ),
@@ -276,8 +276,8 @@ fun UploadScreen(userLogin: String) {
                     .padding(14.dp, 10.dp, 14.dp, 10.dp),
                 textStyle = TextStyle(
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 16.sp,
-                    lineHeight = 24.sp,
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = fontFamily
                 ),
@@ -359,9 +359,6 @@ fun UploadScreen(userLogin: String) {
                     }
 
                 }
-
-
-
                 scope.launch {
 
                     isUploading = true

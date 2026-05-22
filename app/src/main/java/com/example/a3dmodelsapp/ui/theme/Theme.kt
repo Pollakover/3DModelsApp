@@ -167,7 +167,7 @@ object CustomTextStyles {
 //    )
 
     // Заголовки
-    val heading_large = TextStyle(fontSize = 24.sp, lineHeight = 32.sp)
+    val heading_large = TextStyle(fontSize = 24.sp, lineHeight = 32.sp, fontWeight = FontWeight.Bold)
     val heading_medium = TextStyle(fontSize = 20.sp, lineHeight = 28.sp)
     val heading_small = TextStyle(fontSize = 18.sp, lineHeight = 24.sp)
 
@@ -176,12 +176,16 @@ object CustomTextStyles {
     val sub_heading_medium = TextStyle(fontSize = 16.sp, lineHeight = 24.sp)
 
     // Основной текст
-    val body1_regular = TextStyle(fontSize = 14.sp, lineHeight = 20.sp)  // ← ваш текущий
-    val body1_medium = TextStyle(fontSize = 14.sp, lineHeight = 20.sp)    // ← ваш текущий
+    val body1_regular = TextStyle(fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Normal)  // ← ваш текущий
+    val body1_medium = TextStyle(fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Medium)
+    val body1_semi_bold = TextStyle(fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.SemiBold)
+    val body1_bold = TextStyle(fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold) // ← ваш текущий
 
     // Вспомогательный текст
-    val body2_regular = TextStyle(fontSize = 12.sp, lineHeight = 16.sp)   // ← ваш текущий
-    val body2_medium = TextStyle(fontSize = 12.sp, lineHeight = 16.sp)
+    val body2_regular = TextStyle(fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.Normal)   // ← ваш текущий
+    val body2_medium = TextStyle(fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.Medium)
+    val body2_semi_bold = TextStyle(fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold)
+    val body2_bold = TextStyle(fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.Bold)
 
 
 

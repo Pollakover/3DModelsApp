@@ -95,7 +95,7 @@ fun SignUpScreen(navController: NavController) {
 
                 Text(
                     text = "Создайте аккаунт",
-                    style = CustomTextStyles.heading1_semi_bold
+                    style = CustomTextStyles.heading_large
                 )
                 Text(
                     text = "Заполните поля для регистрации.",

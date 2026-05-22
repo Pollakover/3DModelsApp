@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.a3dmodelsapp.R
 import com.example.a3dmodelsapp.ui.theme.CustomTextStyles
+import com.example.a3dmodelsapp.ui.theme.backgroundColor
 import com.example.a3dmodelsapp.ui.theme.borderColor
 import com.example.a3dmodelsapp.ui.theme.fontFamily
 import com.example.a3dmodelsapp.ui.theme.secondary
@@ -71,13 +72,14 @@ fun DropdownMenu(
 
                 focusedTrailingIconColor = textColor,
                 unfocusedTrailingIconColor = textColor
-            )
+            ),
+            textStyle = CustomTextStyles.body1_regular
         )
 
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .border(1.dp, borderColor, RoundedCornerShape(20.dp))
                 .background(secondary)
@@ -90,12 +92,6 @@ fun DropdownMenu(
                             color = textColor,
                             style = CustomTextStyles.body1_regular,
                             text = status,
-//                            style = TextStyle(
-//                                color = MaterialTheme.colorScheme.onSurface,
-//                                fontSize = 16.sp,
-//                                lineHeight = 24.sp,
-//                                fontWeight = FontWeight.Normal
-//                            ),
                         )
                     },
                     onClick = {
