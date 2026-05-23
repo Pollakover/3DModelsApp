@@ -58,7 +58,7 @@ fun ModelCard(name: String, painter: Painter, onOpenInfo: () -> Unit) {
             modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(Color.Transparent),
             contentScale = ContentScale.FillWidth
         )
-        androidx.wear.compose.material3.Text(
+        Text(
             text = name,
             modifier = Modifier.padding(10.dp),
             fontFamily = fontFamily,

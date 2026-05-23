@@ -11,21 +11,21 @@ android {
         version = release(36)
     }
 
-    packaging {
-
-        resources {
-
-            excludes += "META-INF/INDEX.LIST"
-
-            excludes += "META-INF/io.netty.versions.properties"
-
-            excludes += "META-INF/DEPENDENCIES"
-
-            excludes += "META-INF/LICENSE*"
-
-            excludes += "META-INF/NOTICE*"
-        }
-    }
+//    packaging {
+//
+//        resources {
+//
+//            excludes += "META-INF/INDEX.LIST"
+//
+//            excludes += "META-INF/io.netty.versions.properties"
+//
+//            excludes += "META-INF/DEPENDENCIES"
+//
+//            excludes += "META-INF/LICENSE*"
+//
+//            excludes += "META-INF/NOTICE*"
+//        }
+//    }
 
     defaultConfig {
         applicationId = "com.example.a3dmodelsapp"
@@ -47,11 +47,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
+        sourceCompatibility = JavaVersion.VERSION_22
+        targetCompatibility = JavaVersion.VERSION_22
     }
     buildFeatures {
         compose = true
@@ -59,7 +56,6 @@ android {
 }
 
 dependencies {
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.10.6")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -87,29 +83,5 @@ dependencies {
     implementation (libs.converter.gson)
     implementation(libs.coil.compose)
 
-    implementation("androidx.activity:activity-compose:1.13.0")
-
-
-//    implementation("io.github.jan-tennert.supabase:supabase-kt:3.6.0")
-//
-//    implementation("io.github.jan-tennert.supabase:postgrest-kt:3.6.0")
-//    implementation("io.github.jan-tennert.supabase:storage-kt:3.6.0")
-//    implementation("io.github.jan-tennert.supabase:auth-kt:3.6.0")
-
-//    implementation("io.github.jan-tennert.supabase:storage-kt:3.5.0")
-//    //implementation("io.ktor:ktor-client-[engine]:VERSION")
-//    implementation("io.ktor:ktor-client-android:3.5.0")
-
-
-//    implementation("io.github.jan-tennert.supabase:supabase-kt:3.5.0")
-//    implementation("io.github.jan-tennert.supabase:postgrest-kt:3.5.0")
-//    implementation("io.github.jan-tennert.supabase:storage-kt:3.5.0")
-//    implementation("io.github.jan-tennert.supabase:auth-kt:3.5.0")
-//
-//    implementation("io.ktor:ktor-client-android:3.5.0")
-//    implementation("io.ktor:ktor-client-content-negotiation:3.5.0")
-//    implementation("io.ktor:ktor-client-logging:3.5.0")
-//    implementation("io.ktor:ktor-client-auth:3.5.0")
-
-
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.11.2")
 }

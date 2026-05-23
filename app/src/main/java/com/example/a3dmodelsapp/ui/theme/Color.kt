@@ -16,8 +16,11 @@ val SecondColor = Color(0xFF00B6FF)
 
 val backgroundColor = Color(0xFF171A1F)
 val secondary = Color(0xFF1E2128)
-val primary = Color(0xFF6A98F3)
-val primaryTransparent = Color(0x4D6A98F3)
+val primary = Color(0xFFF3C56A)
+val primaryTransparent = primary.copy(alpha = 0.3f)
+
+//Color(0xFF6A98F3)F3C56A
+
 val textColor = Color(0xFFDEE1E6)
 val borderColor = Color(0xFF565D6C)
 val test = Color(0xFF1F2936)

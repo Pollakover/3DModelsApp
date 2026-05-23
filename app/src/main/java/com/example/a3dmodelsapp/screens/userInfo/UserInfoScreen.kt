@@ -82,52 +82,86 @@ fun UserInfoScreen(userLogin: String) {
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(5.dp))
         {
-            when {
-                loading -> CircularProgressIndicator()
-                error != null -> androidx.compose.material3.Text("Error: $error", color = Color.Red)
-                user != null -> {
-                    androidx.compose.material3.Text(
-                        text = "Логин: ${user?.login ?: ""}",
-                        color = textColor,
-                        style = CustomTextStyles.body1_bold
-                    )
-                    androidx.compose.material3.Text(
-                        text = "Почта: ${user?.email ?: ""}",
-                        color = textColor,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        letterSpacing = 0.5.sp
+            if (userLogin.isEmpty()) {
+                Text(
+                    "Вы не вошли в аккаунт.",
+                    style = CustomTextStyles.body1_regular
+                )
+            }
+
+            else {
+                Text(userLogin)
+                when {
+                    loading -> CircularProgressIndicator()
+                    error != null -> Text("Error: $error", color = Color.Red)
+                    user != null -> {
+                        Text(
+                            text = "Логин: ${user?.login ?: ""}",
+                            color = textColor,
+                            style = CustomTextStyles.body1_bold
+                        )
+                        androidx.compose.material3.Text(
+                            text = "Почта: ${user?.email ?: ""}",
+                            color = textColor,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
+                }
+            }
+
+        }
+
+        if (userLogin.isEmpty()) {
+            val context = LocalContext.current
+            Button(
+                onClick = {logout(context)},
+                shape = CircleShape,
+                modifier = Modifier
+                    .fillMaxWidth()
+
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "Войти",
+                        fontFamily = fontFamily,
+                        style = CustomTextStyles.body1_medium,
+                        color = backgroundColor
                     )
                 }
             }
-        }
+        } else {
+            Button(
+                onClick = {logoutDialogState.value = true},
+                shape = CircleShape,
+                modifier = Modifier
+                    .fillMaxWidth()
 
-        Button(
-            onClick = {logoutDialogState.value = true},
-            shape = CircleShape,
-            modifier = Modifier
-                .fillMaxWidth()
-
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.logout_24px),
-                    contentDescription = "",
-                    tint = backgroundColor
-                )
-                Text(
-                    "Выйти",
-                    fontFamily = fontFamily,
-                    style = CustomTextStyles.body1_medium,
-                    color = backgroundColor
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.logout_24px),
+                        contentDescription = "",
+                        tint = backgroundColor
+                    )
+                    Text(
+                        "Выйти",
+                        fontFamily = fontFamily,
+                        style = CustomTextStyles.body1_medium,
+                        color = backgroundColor
+                    )
+                }
             }
-        }
-        if (logoutDialogState.value) {
-            ExitDialog(logoutDialogState)
+            if (logoutDialogState.value) {
+                ExitDialog(logoutDialogState)
+            }
         }
     }
 }

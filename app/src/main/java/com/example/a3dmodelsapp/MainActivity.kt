@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
 
-        val userLogin = intent.getStringExtra("USER_LOGIN") ?: "test1"
+        val userLogin = intent.getStringExtra("USER_LOGIN") ?: ""
         val sharedPreferences = getSharedPreferences("user_preferences", MODE_PRIVATE)
         sharedPreferences.edit {
             putString("user_login", userLogin)
