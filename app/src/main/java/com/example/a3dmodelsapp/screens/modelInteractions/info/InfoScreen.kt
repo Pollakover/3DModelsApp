@@ -36,6 +36,7 @@ import com.example.a3dmodelsapp.ui.theme.fontFamily
 import com.example.a3dmodelsapp.ui.theme.secondary
 import com.example.a3dmodelsapp.ui.theme.textColor
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -203,13 +204,16 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
                 fontFamily = fontFamily
             )
 
-            Column(
+            Card(
                 modifier = Modifier
-                    .clip(shape = RoundedCornerShape(20.dp))
-                    .fillMaxWidth()
-                    .background(secondary)
-            ) {
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = secondary
+                ),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
 
+            ) {
                 Column(
                     modifier = Modifier
                         .padding(16.dp)  // ← было 10.dp, увеличил для воздушности
@@ -251,6 +255,17 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
                     }
                 }
             }
+
+//            Column(
+//                modifier = Modifier
+//                    .clip(shape = RoundedCornerShape(20.dp))
+//                    .fillMaxWidth()
+//                    .background(secondary)
+//            ) {
+//
+//
+//
+//            }
 
             Button(
                 onClick = {MINavController.navigate("viewer")},

@@ -51,7 +51,6 @@ import com.example.a3dmodelsapp.ui.theme.fontFamily
 import com.example.a3dmodelsapp.ui.theme.primary
 import com.example.a3dmodelsapp.ui.theme.secondary
 import com.example.a3dmodelsapp.ui.theme.textColor
-import com.example.a3dmodelsapp.ui.theme.warning_500
 
 //@Preview
 @Composable
@@ -90,7 +89,6 @@ fun UserInfoScreen(userLogin: String) {
             }
 
             else {
-                Text(userLogin)
                 when {
                     loading -> CircularProgressIndicator()
                     error != null -> Text("Error: $error", color = Color.Red)
@@ -191,7 +189,7 @@ fun ExitDialog(state: MutableState<Boolean>) {
                         Icon(
                             painter = painterResource(id = R.drawable.logout_24px),
                             contentDescription = "",
-                            tint = warning_500,
+                            tint = primary,
                             modifier = Modifier.size(30.dp)
                         )
                         Text(

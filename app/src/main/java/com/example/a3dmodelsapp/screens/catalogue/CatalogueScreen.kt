@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,28 +46,38 @@ import com.example.a3dmodelsapp.ui.theme.textColor
 
 @Composable
 fun ModelCard(name: String, painter: Painter, onOpenInfo: () -> Unit) {
-    Column(
+    Card(
+
+        shape = RoundedCornerShape(20.dp),
+//        modifier = Modifier
+//            .clickable(onClick = { onOpenInfo()}),
+        colors = CardDefaults.cardColors(
+            containerColor = secondary
+        ),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
         modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(secondary)
+            .clip(RoundedCornerShape(20.dp))
+            //.background(secondary)
             .clickable(onClick = { onOpenInfo()
             }),
-
         ) {
-        Image(
-            painter = painterResource(R.drawable.icon),
-            contentDescription = "",
-            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(Color.Transparent),
-            contentScale = ContentScale.FillWidth
-        )
-        Text(
-            text = name,
-            modifier = Modifier.padding(10.dp),
-            fontFamily = fontFamily,
-            style = CustomTextStyles.body1_medium,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+            Image(
+                painter = painterResource(R.drawable.icon),
+                contentDescription = "",
+                modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(Color.Transparent),
+                contentScale = ContentScale.FillWidth
+            )
+            Text(
+                text = name,
+                modifier = Modifier.padding(10.dp),
+                fontFamily = fontFamily,
+                style = CustomTextStyles.body1_medium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 

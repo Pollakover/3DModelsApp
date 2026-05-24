@@ -5,7 +5,14 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,6 +53,7 @@ import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
@@ -61,7 +69,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
+        enableEdgeToEdge()
 
         val userLogin = intent.getStringExtra("USER_LOGIN") ?: ""
         val sharedPreferences = getSharedPreferences("user_preferences", MODE_PRIVATE)
@@ -70,14 +78,14 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            val view = LocalView.current
-
-            LaunchedEffect(Unit) {
-                val window = (view.context as Activity).window
-
-                window.navigationBarColor =
-                    secondary.toArgb()
-            }
+//            val view = LocalView.current
+//
+//            LaunchedEffect(Unit) {
+//                val window = (view.context as Activity).window
+//
+//                window.navigationBarColor =
+//                    secondary.toArgb()
+//            }
 
             val mainViewModel: MainViewModel = viewModel(
                 factory = object : ViewModelProvider.Factory {
@@ -137,6 +145,20 @@ fun MainScreen(
                             Icon(
                                 painterResource(id = R.drawable.arrow_back_24px),
                                 contentDescription = "/."
+                            )
+                        }
+                    }
+                    else {
+                        Box(
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(primary)
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.icon),
+                                modifier = Modifier.size(30.dp).padding(5.dp),
+                                contentDescription = "Logo"
                             )
                         }
                     }

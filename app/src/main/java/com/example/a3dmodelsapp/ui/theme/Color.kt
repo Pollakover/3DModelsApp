@@ -23,7 +23,7 @@ val primaryTransparent = primary.copy(alpha = 0.3f)
 
 val textColor = Color(0xFFDEE1E6)
 val borderColor = Color(0xFF565D6C)
-val test = Color(0xFF1F2936)
+val test = Color(0xFF362C1F)
 val textFieldTip = Color(0xFF959DAD)
 
 val gradient1 = Color(0xFF343D4C)
