@@ -55,8 +55,11 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AssistChip
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.a3dmodelsapp.database.ApiClient
@@ -66,6 +69,11 @@ import okhttp3.RequestBody.Companion.toRequestBody
 
 @Composable
 fun UploadScreen(userLogin: String) {
+
+    val selectedCategories = remember {
+        mutableStateListOf<String>()
+    }
+
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -303,27 +311,55 @@ fun UploadScreen(userLogin: String) {
                 fontFamily = fontFamily,
                 style = CustomTextStyles.body2_medium
             )
-            DropdownMenu()
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                content = {
-                    items(21) {index ->
-                        Badge(
-                            containerColor = secondary,
-                            contentColor = textColor,
-                            modifier = Modifier.height(32.dp)
-                        ) {
-                            Text(
-                                "Категория $index",
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                style = CustomTextStyles.body2_regular,
-                                color = textColor,
-                                fontFamily = fontFamily
-                            )
+            DropdownMenu(
+                selectedCategories = selectedCategories,
+
+                onCategoryCheckedChange = { category, isChecked ->
+
+                    if (isChecked) {
+
+                        if (!selectedCategories.contains(category)) {
+                            selectedCategories.add(category)
                         }
+
+                    } else {
+
+                        selectedCategories.remove(category)
                     }
                 }
             )
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+
+                items(selectedCategories) { category ->
+
+                    Badge(
+                        containerColor = secondary,
+                        contentColor = textColor,
+                        modifier = Modifier
+                            .height(32.dp)
+                            .clip(CircleShape)
+                            .clickable(onClick = {
+                                selectedCategories.remove(category)
+                            },)
+                    ) {
+
+                        Text(
+                            text = category,
+
+                            modifier = Modifier.padding(
+                                horizontal = 12.dp,
+                                vertical = 6.dp
+                            ),
+
+                            style = CustomTextStyles.body2_regular,
+                            color = textColor,
+                            fontFamily = fontFamily
+                        )
+                    }
+                }
+            }
         }
 
         Button(

@@ -227,12 +227,12 @@ fun UpdateScreen(MINavController: NavController) {
                     fontFamily = fontFamily,
                     style = CustomTextStyles.body2_medium
                 )
-                DropdownMenu(
-                    selectedField = status,
-                    onFieldSelected = { newStatus ->
-                        status = newStatus
-                    },
-                )
+//                DropdownMenu(
+//                    selectedField = status,
+//                    onFieldSelected = { newStatus ->
+//                        status = newStatus
+//                    },
+//                )
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(5.dp),
                     content = {

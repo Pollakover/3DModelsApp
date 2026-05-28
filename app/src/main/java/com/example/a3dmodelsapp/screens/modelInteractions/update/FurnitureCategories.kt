@@ -26,7 +26,10 @@ data class CategorySection(
 )
 
 @Composable
-fun FurnitureCategories() {
+fun FurnitureCategories(
+    selectedCategories: List<String>,
+    onCategoryCheckedChange: (String, Boolean) -> Unit
+) {
 
     val sections = listOf(
 
@@ -91,10 +94,6 @@ fun FurnitureCategories() {
         )
     )
 
-    val checkedItems = remember {
-        mutableStateMapOf<String, Boolean>()
-    }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -110,6 +109,7 @@ fun FurnitureCategories() {
                 tonalElevation = 4.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
+
                 Text(
                     text = section.title,
                     style = CustomTextStyles.body1_bold,
@@ -129,6 +129,7 @@ fun FurnitureCategories() {
                             horizontal = 16.dp,
                             vertical = 6.dp
                         ),
+
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -140,9 +141,10 @@ fun FurnitureCategories() {
                     )
 
                     Checkbox(
-                        checked = checkedItems[item] ?: false,
-                        onCheckedChange = {
-                            checkedItems[item] = it
+                        checked = selectedCategories.contains(item),
+
+                        onCheckedChange = { checked ->
+                            onCategoryCheckedChange(item, checked)
                         }
                     )
                 }
