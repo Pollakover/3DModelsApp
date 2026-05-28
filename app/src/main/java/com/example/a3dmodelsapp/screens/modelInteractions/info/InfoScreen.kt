@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
@@ -54,6 +55,9 @@ import com.example.a3dmodelsapp.ui.theme.test
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InfoScreen(rootNavController: NavController, MINavController: NavController) {
+
+    val categoriersOptions = listOf("Спальня", "Дерево", "Хранение")
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -114,7 +118,7 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
                 Box(modifier = Modifier.height(200.dp)) {
 
                     Image(
-                        painter = painterResource(R.drawable.image_is_ref_1),
+                        painter = painterResource(R.drawable.render),
                         contentDescription = "Logo",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize(),
@@ -146,14 +150,14 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
                         ) {
 
                             Text(
-                                "Название",
+                                "Тумбочка",
                                 style = CustomTextStyles.sub_heading_regular,
                                 color = textColor,
                                 fontFamily = fontFamily
                             )
 
                             Text(
-                                "Автор: Имя автора",
+                                "Автор: Поляков АМ",
                                 style = CustomTextStyles.body2_regular,
                                 color = textColor,
                                 fontFamily = fontFamily
@@ -177,16 +181,14 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
-
-                    items(21) { index ->
-
+                    items(categoriersOptions) { category ->
                         Badge(
                             containerColor = secondary,
                             contentColor = textColor,
                             modifier = Modifier.height(32.dp)
                         ) {
                             Text(
-                                "Категория $index",
+                                category,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                                 style = CustomTextStyles.body2_regular,
                                 color = textColor,
@@ -198,7 +200,7 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
             }
 
             Text(
-                "ОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписаниеОписание.",
+                "Прикроватная тумбочка, с металической ручкой, выполненная из дерева.",
                 style = CustomTextStyles.body1_regular,
                 color = textColor,
                 fontFamily = fontFamily
@@ -244,13 +246,13 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
 
                             ModelInfo(
                                 painter = painterResource(R.drawable.hard_drive_24px),
-                                text = "Размер: 12.5 МБ"
+                                text = "Размер: 1.5 МБ"
                             )
                         }
 
                         ModelInfo(
                             painter = painterResource(R.drawable.signal_cellular_null_24px),
-                            text = "Количество полигонов: 250k"
+                            text = "Количество полигонов: 25k"
                         )
                     }
                 }

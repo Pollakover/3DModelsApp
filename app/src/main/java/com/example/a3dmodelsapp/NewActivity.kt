@@ -44,17 +44,3 @@ class NewActivity : ComponentActivity() {
         }
     }
 }
-
-@Composable
-@Preview(showBackground = true)
-fun NewCheckbox() {
-    var isChecked : MutableState<Boolean> = remember {mutableStateOf(true)}
-    Checkbox(
-        checked = isChecked.value,
-        onCheckedChange = {
-            Log.i(TAG, "NewCheckbox: $it")
-            isChecked.value = it
-                          },
-        modifier = Modifier.graphicsLayer(scaleX = 4f, scaleY = 4f)
-    )
-}

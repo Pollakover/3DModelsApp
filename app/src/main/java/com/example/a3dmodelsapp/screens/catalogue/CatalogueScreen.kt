@@ -49,8 +49,6 @@ fun ModelCard(name: String, painter: Painter, onOpenInfo: () -> Unit) {
     Card(
 
         shape = RoundedCornerShape(20.dp),
-//        modifier = Modifier
-//            .clickable(onClick = { onOpenInfo()}),
         colors = CardDefaults.cardColors(
             containerColor = secondary
         ),
@@ -59,12 +57,11 @@ fun ModelCard(name: String, painter: Painter, onOpenInfo: () -> Unit) {
         Column(
         modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
-            //.background(secondary)
             .clickable(onClick = { onOpenInfo()
             }),
         ) {
             Image(
-                painter = painterResource(R.drawable.icon),
+                painter = painterResource(R.drawable.cube),
                 contentDescription = "",
                 modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(Color.Transparent),
                 contentScale = ContentScale.FillWidth
@@ -81,7 +78,7 @@ fun ModelCard(name: String, painter: Painter, onOpenInfo: () -> Unit) {
     }
 }
 
-val names = listOf("adasdasdas", "ajikshdlduoiashdfoaudfhsdiuhfsdu", "12", "123wqdssdd", "asdasddddd")
+val names = listOf("Стул", "Тумбочка", "Полка", "Ваза", "Коврик для гостинной с длинным ворсом")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

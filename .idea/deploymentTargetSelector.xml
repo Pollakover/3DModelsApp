@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-05-17T16:17:28.972277800Z">
+        <DropdownSelection timestamp="2026-05-24T14:50:22.774926500Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\revok\.android\avd\Pixel_10_Pro_XL.avd" />

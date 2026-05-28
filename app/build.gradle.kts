@@ -56,6 +56,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -69,6 +70,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui)
+    implementation(libs.play.services.games)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -83,17 +85,15 @@ dependencies {
     implementation (libs.converter.gson)
     implementation(libs.coil.compose)
 
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.11.2")
+    implementation(libs.androidx.compose.ui.text.google.fonts)
 
     // SceneView для Compose
-    implementation("io.github.sceneview:sceneview:4.12.0")     // 3D
-    implementation("io.github.sceneview:arsceneview:4.12.0")
-    implementation("com.squareup.okhttp3:okhttp:5.3.2")
-    implementation("io.coil-kt.coil3:coil-compose:3.4.0")
-    implementation("io.coil-kt.coil3:coil-network-okhttp:3.4.0")
-    // Если нужны стандартные иконки Material:
-    implementation("androidx.compose.material:material-icons-core:1.7.8")
+    implementation(libs.sceneview)     // 3D
+    //implementation("io.github.sceneview:arsceneview:4.12.0")
+    //implementation("com.squareup.okhttp3:okhttp:5.3.2")
+    implementation(libs.coil3.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
-// Если нужны расширенные иконки (больше выбора):
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
 }

@@ -1,10 +1,6 @@
 package com.example.a3dmodelsapp.screens.upload
 
-import android.R.attr.level
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -61,15 +57,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.a3dmodelsapp.database.ApiClient
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import coil.compose.AsyncImage
-import com.example.a3dmodelsapp.ui.theme.success_500
 
 @Composable
 fun UploadScreen(userLogin: String) {
@@ -119,16 +112,16 @@ fun UploadScreen(userLogin: String) {
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
 
-        AsyncImage(
-            model = "http://192.168.1.6:8080/files/rds.png",
-            contentDescription = "image",
-            modifier = Modifier
-                .size(500.dp)
-                .clip(RoundedCornerShape(20.dp)),
-            contentScale = ContentScale.Crop,
-            placeholder = painterResource(R.drawable.icon),
-            error = painterResource(R.drawable.icon)
-        )
+//        AsyncImage(
+//            model = "http://192.168.1.6:8080/files/rds.png",
+//            contentDescription = "image",
+//            modifier = Modifier
+//                .size(500.dp)
+//                .clip(RoundedCornerShape(20.dp)),
+//            contentScale = ContentScale.Crop,
+//            placeholder = painterResource(R.drawable.icon),
+//            error = painterResource(R.drawable.icon)
+//        )
 
         Column(
             modifier = Modifier
@@ -310,12 +303,7 @@ fun UploadScreen(userLogin: String) {
                 fontFamily = fontFamily,
                 style = CustomTextStyles.body2_medium
             )
-            DropdownMenu(
-                selectedField = status,
-                onFieldSelected = { newStatus ->
-                    status = newStatus
-                },
-            )
+            DropdownMenu()
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
                 content = {
