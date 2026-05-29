@@ -40,6 +40,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.ui.platform.LocalView
 import android.app.Activity
+import android.content.Context
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.FlowRow
@@ -57,6 +58,7 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -77,6 +79,10 @@ import io.github.sceneview.rememberModelLoader
 import io.github.sceneview.rememberRenderer
 import io.github.sceneview.rememberScene
 import io.github.sceneview.rememberView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.net.URL
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -106,10 +112,10 @@ fun ViewerScreen(MINavController: NavController) {
 
     val environments = remember {
         listOf(
-            EnvOption("Кухня", "environments/studio_2k.hdr"),
-            EnvOption("Ванная", "environments/studio_warm_2k.hdr"),
-            EnvOption("Гостинная", "environments/outdoor_cloudy_2k.hdr"),
-            EnvOption("Спальня", "environments/chinese_garden_2k.hdr"),
+            EnvOption("Кухня", "envs/studio_2k.hdr"),
+            EnvOption("Ванная", "envs/studio_warm_2k.hdr"),
+            EnvOption("Гостинная", "envs/outdoor_cloudy_2k.hdr"),
+            EnvOption("Спальня", "envs/chinese_garden_2k.hdr"),
 //            EnvOption("Sunset", "environments/sunset_2k.hdr"),
 //            EnvOption("Rooftop Night", "environments/rooftop_night_2k.hdr"),
 //            EnvOption("Night Sky", "environments/night_sky_2k.hdr")
@@ -167,6 +173,41 @@ fun ViewerScreen(MINavController: NavController) {
         }
     }
 
+    val modelUrl = "http://192.168.1.6:8080/files/Duck.glb"
+
+    // Состояние модели
+    val modelInstanceState = remember {
+        mutableStateOf<io.github.sceneview.model.ModelInstance?>(null)
+    }
+
+    var isLoading by remember { mutableStateOf(true) }
+
+    // Загрузка модели
+    LaunchedEffect(Unit) {
+
+        isLoading = true
+
+        try {
+
+            val file = withContext(Dispatchers.IO) {
+                downloadGlbFile(
+                    context = activity,
+                    url = modelUrl
+                )
+            }
+
+            val instance = modelLoader.createModelInstance(file)
+
+            modelInstanceState.value = instance
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            isLoading = false
+        }
+    }
+
+
     Scaffold() { _ ->
         Box(
             modifier = Modifier
@@ -177,6 +218,7 @@ fun ViewerScreen(MINavController: NavController) {
             // Фон - 3D сцена
             SceneView(
                 modifier = Modifier.fillMaxSize(),
+
                 engine = engine,
                 view = rememberView(engine),
                 renderer = rememberRenderer(engine),
@@ -187,175 +229,215 @@ fun ViewerScreen(MINavController: NavController) {
                 environmentLoader = environmentLoader,
 
                 mainLightNode = rememberMainLightNode(engine) {
-                    intensity = 100_000.0f
+                    intensity = intensity
                 },
 
                 environment = rememberEnvironment(environmentLoader) {
                     environmentLoader.createHDREnvironment(
-                        assetFileLocation = "envs/studio_warm_2k.hdr"
+                        assetFileLocation = selectedEnv.file
                     )!!
-                },
+                }
 
-//                cameraNode = rememberCameraNode(engine) {
-//                    position = Position(z = 4.0f)
-//                },
-
-//                cameraManipulator = rememberCameraManipulator(),
             ) {
-                rememberModelInstance(modelLoader, "models/comodblend.glb")?.let {
+
+                modelInstanceState.value?.let { instance ->
+
                     ModelNode(
-                        modelInstance = it,
+                        modelInstance = instance,
                         scaleToUnits = 1.0f,
                         autoAnimate = true
                     )
                 }
             }
 
-            Box() {
-                Column(
+            if (isLoading) {
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(10.dp),
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .background(Color.Black.copy(alpha = 0.5f)),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Row(
-                        Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start
-                    ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                        androidx.compose.material3.CircularProgressIndicator(
+                            color = primary
+                        )
+
+                        Text(
+                            text = "Загрузка модели…",
+                            color = textColor,
+                            fontFamily = fontFamily,
+                            style = CustomTextStyles.body1_regular,
+                            modifier = Modifier.padding(top = 12.dp)
+                        )
+
+                        // 👇 КНОПКА НАЗАД ВНУТРИ ОВЕРЛЕЯ
                         IconButton(
-                            shape = RoundedCornerShape(20.dp),
+                            onClick = { MINavController.popBackStack() },
+                            modifier = Modifier.padding(top = 20.dp),
                             colors = IconButtonColors(
                                 containerColor = backgroundColor.copy(alpha = 0.3f),
                                 contentColor = textColor,
                                 disabledContainerColor = Color.White.copy(alpha = 0.3f),
                                 disabledContentColor = textColor
-                            ),
-                            onClick = { MINavController.popBackStack() },
+                            )
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.close_24px),
-                                contentDescription = "/"
-                            )
-                        }
-                    }
-                    Card(
-                        shape = RoundedCornerShape(20.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = backgroundColor.copy(alpha = 0.3f)
-                        ),
-                        elevation = CardDefaults.cardElevation(0.dp)
-                    ) {
-                        Row() {
-                            NavigationBarItem(
-                                colors = NavigationBarItemColors(
-                                    selectedIconColor = primary,
-                                    selectedTextColor = primary,
-                                    selectedIndicatorColor = primaryTransparent,
-                                    unselectedIconColor = textColor,
-                                    unselectedTextColor = textColor,
-                                    disabledIconColor = textColor,
-                                    disabledTextColor = textColor
-                                ),
-                                selected = false,
-                                onClick = {  },
-                                icon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.refresh_24px),
-                                        contentDescription = "",
-                                    )
-                                },
-                                label = {
-                                    Text(
-                                        "Сброс",
-                                        fontFamily = fontFamily,
-                                        style = CustomTextStyles.body2_regular
-                                    )
-                                }
-                            )
-                            NavigationBarItem(
-                                colors = NavigationBarItemColors(
-                                    selectedIconColor = primary,
-                                    selectedTextColor = primary,
-                                    selectedIndicatorColor = primaryTransparent,
-                                    unselectedIconColor = textColor,
-                                    unselectedTextColor = textColor,
-                                    disabledIconColor = textColor,
-                                    disabledTextColor = textColor
-                                ),
-                                selected = false,
-                                onClick = { },
-                                icon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.photo_camera_24px),
-                                        contentDescription = "",
-                                    )
-                                },
-                                label = {
-                                    Text(
-                                        "Снимок",
-                                        fontFamily = fontFamily,
-                                        style = CustomTextStyles.body2_regular
-                                    )
-                                }
-                            )
-                            NavigationBarItem(
-                                colors = NavigationBarItemColors(
-                                    selectedIconColor = primary,
-                                    selectedTextColor = primary,
-                                    selectedIndicatorColor = primaryTransparent,
-                                    unselectedIconColor = textColor,
-                                    unselectedTextColor = textColor,
-                                    disabledIconColor = textColor,
-                                    disabledTextColor = textColor
-                                ),
-                                selected = false,
-                                onClick = { showLightBottomSheet = true },
-                                icon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.light_24px),
-                                        contentDescription = "",
-                                    )
-                                },
-                                label = {
-                                    Text(
-                                        "Свет",
-                                        fontFamily = fontFamily,
-                                        style = CustomTextStyles.body2_regular
-                                    )
-                                }
-                            )
-                            NavigationBarItem(
-                                colors = NavigationBarItemColors(
-                                    selectedIconColor = primary,
-                                    selectedTextColor = primary,
-                                    selectedIndicatorColor = primaryTransparent,
-                                    unselectedIconColor = textColor,
-                                    unselectedTextColor = textColor,
-                                    disabledIconColor = textColor,
-                                    disabledTextColor = textColor
-                                ),
-                                selected = false,
-                                onClick = { showBackgroundBottomSheet = true },
-                                icon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.wallpaper_24px),
-                                        contentDescription = "",
-                                    )
-                                },
-                                label = {
-                                    Text(
-                                        "Фон",
-                                        fontFamily = fontFamily,
-                                        style = CustomTextStyles.body2_regular
-                                    )
-                                }
+                                contentDescription = null
                             )
                         }
                     }
                 }
+            } else {
+                Box() {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Row(
+                            Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            IconButton(
+                                shape = RoundedCornerShape(20.dp),
+                                colors = IconButtonColors(
+                                    containerColor = backgroundColor.copy(alpha = 0.3f),
+                                    contentColor = textColor,
+                                    disabledContainerColor = Color.White.copy(alpha = 0.3f),
+                                    disabledContentColor = textColor
+                                ),
+                                onClick = { MINavController.popBackStack() },
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.close_24px),
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                        Card(
+                            shape = RoundedCornerShape(20.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = backgroundColor.copy(alpha = 0.3f)
+                            ),
+                            elevation = CardDefaults.cardElevation(0.dp)
+                        ) {
+                            Row() {
+                                NavigationBarItem(
+                                    colors = NavigationBarItemColors(
+                                        selectedIconColor = primary,
+                                        selectedTextColor = primary,
+                                        selectedIndicatorColor = primaryTransparent,
+                                        unselectedIconColor = textColor,
+                                        unselectedTextColor = textColor,
+                                        disabledIconColor = textColor,
+                                        disabledTextColor = textColor
+                                    ),
+                                    selected = false,
+                                    onClick = {  },
+                                    icon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.refresh_24px),
+                                            contentDescription = "",
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            "Сброс",
+                                            fontFamily = fontFamily,
+                                            style = CustomTextStyles.body2_regular
+                                        )
+                                    }
+                                )
+                                NavigationBarItem(
+                                    colors = NavigationBarItemColors(
+                                        selectedIconColor = primary,
+                                        selectedTextColor = primary,
+                                        selectedIndicatorColor = primaryTransparent,
+                                        unselectedIconColor = textColor,
+                                        unselectedTextColor = textColor,
+                                        disabledIconColor = textColor,
+                                        disabledTextColor = textColor
+                                    ),
+                                    selected = false,
+                                    onClick = { },
+                                    icon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.photo_camera_24px),
+                                            contentDescription = "",
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            "Снимок",
+                                            fontFamily = fontFamily,
+                                            style = CustomTextStyles.body2_regular
+                                        )
+                                    }
+                                )
+                                NavigationBarItem(
+                                    colors = NavigationBarItemColors(
+                                        selectedIconColor = primary,
+                                        selectedTextColor = primary,
+                                        selectedIndicatorColor = primaryTransparent,
+                                        unselectedIconColor = textColor,
+                                        unselectedTextColor = textColor,
+                                        disabledIconColor = textColor,
+                                        disabledTextColor = textColor
+                                    ),
+                                    selected = false,
+                                    onClick = { showLightBottomSheet = true },
+                                    icon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.light_24px),
+                                            contentDescription = "",
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            "Свет",
+                                            fontFamily = fontFamily,
+                                            style = CustomTextStyles.body2_regular
+                                        )
+                                    }
+                                )
+                                NavigationBarItem(
+                                    colors = NavigationBarItemColors(
+                                        selectedIconColor = primary,
+                                        selectedTextColor = primary,
+                                        selectedIndicatorColor = primaryTransparent,
+                                        unselectedIconColor = textColor,
+                                        unselectedTextColor = textColor,
+                                        disabledIconColor = textColor,
+                                        disabledTextColor = textColor
+                                    ),
+                                    selected = false,
+                                    onClick = { showBackgroundBottomSheet = true },
+                                    icon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.wallpaper_24px),
+                                            contentDescription = "",
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            "Фон",
+                                            fontFamily = fontFamily,
+                                            style = CustomTextStyles.body2_regular
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
             }
+
+
             if (showLightBottomSheet) {
                 ModalBottomSheet(
                     onDismissRequest = {
@@ -457,7 +539,6 @@ fun ViewerScreen(MINavController: NavController) {
                                             } else Modifier
                                         )
                                         .clickable { selectedColor = preset }
-                                        //.semantics { contentDescription = "${preset.label} light color" }
                                 )
                             }
                         }
@@ -552,5 +633,32 @@ fun ViewerScreen(MINavController: NavController) {
                 }
             }
         }
+    }
+}
+
+suspend fun downloadGlbFile(
+    context: Context,
+    url: String
+): File {
+
+    return withContext(Dispatchers.IO) {
+
+        val connection = URL(url).openConnection()
+        connection.connect()
+
+        val input = connection.getInputStream()
+
+        val file = File(
+            context.cacheDir,
+            "temp_model.glb"
+        )
+
+        file.outputStream().use { output ->
+            input.copyTo(output)
+        }
+
+        input.close()
+
+        file
     }
 }

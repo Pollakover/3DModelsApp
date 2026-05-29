@@ -93,6 +93,7 @@ dependencies {
     //implementation("com.squareup.okhttp3:okhttp:5.3.2")
     implementation(libs.coil3.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.material.icons.extended)
