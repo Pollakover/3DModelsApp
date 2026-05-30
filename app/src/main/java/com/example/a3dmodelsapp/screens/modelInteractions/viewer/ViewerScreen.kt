@@ -338,58 +338,6 @@ fun ViewerScreen(MINavController: NavController) {
                                         disabledTextColor = textColor
                                     ),
                                     selected = false,
-                                    onClick = {  },
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.refresh_24px),
-                                            contentDescription = "",
-                                        )
-                                    },
-                                    label = {
-                                        Text(
-                                            "Сброс",
-                                            fontFamily = fontFamily,
-                                            style = CustomTextStyles.body2_regular
-                                        )
-                                    }
-                                )
-                                NavigationBarItem(
-                                    colors = NavigationBarItemColors(
-                                        selectedIconColor = primary,
-                                        selectedTextColor = primary,
-                                        selectedIndicatorColor = primaryTransparent,
-                                        unselectedIconColor = textColor,
-                                        unselectedTextColor = textColor,
-                                        disabledIconColor = textColor,
-                                        disabledTextColor = textColor
-                                    ),
-                                    selected = false,
-                                    onClick = { },
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.photo_camera_24px),
-                                            contentDescription = "",
-                                        )
-                                    },
-                                    label = {
-                                        Text(
-                                            "Снимок",
-                                            fontFamily = fontFamily,
-                                            style = CustomTextStyles.body2_regular
-                                        )
-                                    }
-                                )
-                                NavigationBarItem(
-                                    colors = NavigationBarItemColors(
-                                        selectedIconColor = primary,
-                                        selectedTextColor = primary,
-                                        selectedIndicatorColor = primaryTransparent,
-                                        unselectedIconColor = textColor,
-                                        unselectedTextColor = textColor,
-                                        disabledIconColor = textColor,
-                                        disabledTextColor = textColor
-                                    ),
-                                    selected = false,
                                     onClick = { showLightBottomSheet = true },
                                     icon = {
                                         Icon(
@@ -426,6 +374,58 @@ fun ViewerScreen(MINavController: NavController) {
                                     label = {
                                         Text(
                                             "Фон",
+                                            fontFamily = fontFamily,
+                                            style = CustomTextStyles.body2_regular
+                                        )
+                                    }
+                                )
+                                NavigationBarItem(
+                                    colors = NavigationBarItemColors(
+                                        selectedIconColor = primary,
+                                        selectedTextColor = primary,
+                                        selectedIndicatorColor = primaryTransparent,
+                                        unselectedIconColor = textColor,
+                                        unselectedTextColor = textColor,
+                                        disabledIconColor = textColor,
+                                        disabledTextColor = textColor
+                                    ),
+                                    selected = false,
+                                    onClick = {  },
+                                    icon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.refresh_24px),
+                                            contentDescription = "",
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            "Сброс",
+                                            fontFamily = fontFamily,
+                                            style = CustomTextStyles.body2_regular
+                                        )
+                                    }
+                                )
+                                NavigationBarItem(
+                                    colors = NavigationBarItemColors(
+                                        selectedIconColor = primary,
+                                        selectedTextColor = primary,
+                                        selectedIndicatorColor = primaryTransparent,
+                                        unselectedIconColor = textColor,
+                                        unselectedTextColor = textColor,
+                                        disabledIconColor = textColor,
+                                        disabledTextColor = textColor
+                                    ),
+                                    selected = false,
+                                    onClick = { },
+                                    icon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.photo_camera_24px),
+                                            contentDescription = "",
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            "Снимок",
                                             fontFamily = fontFamily,
                                             style = CustomTextStyles.body2_regular
                                         )

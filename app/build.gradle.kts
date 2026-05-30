@@ -89,12 +89,15 @@ dependencies {
 
     // SceneView для Compose
     implementation(libs.sceneview)     // 3D
-    //implementation("io.github.sceneview:arsceneview:4.12.0")
-    //implementation("com.squareup.okhttp3:okhttp:5.3.2")
+
     implementation(libs.coil3.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.material.icons.extended)
+
+    implementation(libs.filament.android)
+    implementation(libs.gltfio.android)
+    implementation(libs.filament.utils.android)
 }

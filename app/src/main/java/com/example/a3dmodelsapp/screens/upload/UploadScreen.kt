@@ -1,6 +1,7 @@
 package com.example.a3dmodelsapp.screens.upload
 
 import android.content.Context
+import android.graphics.Bitmap
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -55,20 +56,38 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.a3dmodelsapp.database.ApiClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
 @Composable
 fun UploadScreen(userLogin: String) {
+
+    FilamentLoader.init()
+
+    var bitmap by remember {
+        mutableStateOf<Bitmap?>(null)
+    }
+
+    var info by remember {
+        mutableStateOf<ModelInfo?>(null)
+    }
 
     val selectedCategories = remember {
         mutableStateListOf<String>()
@@ -109,6 +128,28 @@ fun UploadScreen(userLogin: String) {
         }
     }
 
+    LaunchedEffect(selectedUri) {
+
+        val uri = selectedUri ?: return@LaunchedEffect
+
+        withContext(Dispatchers.Default) {
+
+            val renderer = OffscreenGlbRenderer(context)
+
+            bitmap = renderer.renderGlbToBitmap(
+                uri,
+                512,
+                512,
+                -45f
+            )
+
+            info = renderer.getModelInfo(uri)
+
+            renderer.destroy()
+
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -120,26 +161,14 @@ fun UploadScreen(userLogin: String) {
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
 
-//        AsyncImage(
-//            model = "http://192.168.1.6:8080/files/rds.png",
-//            contentDescription = "image",
-//            modifier = Modifier
-//                .size(500.dp)
-//                .clip(RoundedCornerShape(20.dp)),
-//            contentScale = ContentScale.Crop,
-//            placeholder = painterResource(R.drawable.icon),
-//            error = painterResource(R.drawable.icon)
-//        )
-
         Column(
             modifier = Modifier
                 .clip(shape = RoundedCornerShape(20.dp))
                 .clickable {
-
                     launcher.launch("*/*")
-                    // launcher.launch("model/gltf-binary")
                 }
                 .fillMaxWidth()
+                .height(170.dp)
                 .drawBehind {
 
                     drawRoundRect(
@@ -156,46 +185,49 @@ fun UploadScreen(userLogin: String) {
                         cornerRadius = CornerRadius(20.dp.toPx())
                     )
                 }
-                .padding(20.dp),
-
-            verticalArrangement = Arrangement.spacedBy(15.dp),
-
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .padding(0.dp),
         ) {
 
-            Icon(
-                painter = painterResource(R.drawable.upload_24px),
-                contentDescription = "",
-                tint = primary,
-                modifier = Modifier.size(50.dp)
-            )
+            if (bitmap != null) {
+                bitmap?.let {
 
-            Text(
-                text =
-                    if (selectedUri == null)
-                        "Выберите файл для загрузки"
-                    else
-                        "Файл выбран",
+                    Image(
+                        bitmap = it.asImageBitmap(),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+            else {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(15.dp),
 
-                style = CustomTextStyles.body1_semi_bold,
-                fontFamily = fontFamily,
-                color = textColor
-            )
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize().padding(20.dp)
+                    ) {
+                    Icon(
+                        painter = painterResource(R.drawable.upload_24px),
+                        contentDescription = "",
+                        tint = primary,
+                        modifier = Modifier.size(50.dp)
+                    )
+                    Text(
+                        "Выберите файл для загрузки",
+                        style = CustomTextStyles.body1_semi_bold,
+                        fontFamily = fontFamily,
+                        color = textColor
+                    )
+                    Text(
+                        "Формат файла должен быть .glb ",
+                        style = CustomTextStyles.body2_regular,
+                        fontFamily = fontFamily,
+                        color = textColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
 
-
-            Text(
-                text =
-                    if (selectedUri == null)
-                        "Формат файла должен быть .glb "
-                    else
-                        selectedUri.toString(),
-
-                style = CustomTextStyles.body2_regular,
-                fontFamily = fontFamily,
-                color = textColor,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            }
         }
 
         Column(

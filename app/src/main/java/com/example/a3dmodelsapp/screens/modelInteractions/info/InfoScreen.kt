@@ -224,7 +224,7 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
                 ) {
 
                     Text(
-                        "Детали модели",
+                        "Характеристики",
                         style = CustomTextStyles.sub_heading_regular,
                         color = textColor,
                         fontFamily = fontFamily
