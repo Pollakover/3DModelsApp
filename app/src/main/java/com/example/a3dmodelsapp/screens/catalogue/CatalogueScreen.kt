@@ -45,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.a3dmodelsapp.R
 import com.example.a3dmodelsapp.ui.theme.CustomTextStyles
 import com.example.a3dmodelsapp.ui.theme.backgroundColor
@@ -70,39 +71,48 @@ fun ModelCard(name: String, painter: Painter, onOpenInfo: () -> Unit) {
             .clickable(onClick = { onOpenInfo() })
             .padding(10.dp),
         ) {
-            Image(
-                painter = painterResource(R.drawable.cube),
-                contentDescription = "",
-                modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(Color.Transparent),
-                contentScale = ContentScale.FillWidth
+//            Image(
+//                painter = painterResource(R.drawable.cube),
+//                contentDescription = "",
+//                modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(primary),
+//                contentScale = ContentScale.FillWidth
+//            )
+            AsyncImage(
+                model = "http://192.168.1.6:8080/files/previews/1780178213368.png",
+                contentDescription = "Model Preview",
+                modifier = Modifier
+                    .clip(RoundedCornerShape(20.dp)),
+                contentScale = ContentScale.FillWidth,
+                placeholder = painterResource(R.drawable.cube),
+                error = painterResource(R.drawable.cube)
             )
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        //.size(36.dp)
-                        .clip(CircleShape)
-                        .background(primary, CircleShape),
-
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.person),
-                        contentDescription = null,
-                        tint = backgroundColor,
-                        modifier = Modifier.size(15.dp)
-                    )
-                }
-                Spacer(Modifier.width(5.dp))
-                Text(
-                    text = "Автор: Имя",
-                    //modifier = Modifier.padding(10.dp),
-                    fontFamily = fontFamily,
-                    style = CustomTextStyles.body1_regular,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                Box(
+//                    modifier = Modifier
+//                        //.size(36.dp)
+//                        .clip(CircleShape)
+//                        .background(primary, CircleShape),
+//
+//                ) {
+//                    Icon(
+//                        painter = painterResource(R.drawable.person),
+//                        contentDescription = null,
+//                        tint = backgroundColor,
+//                        modifier = Modifier.size(15.dp)
+//                    )
+//                }
+//                Spacer(Modifier.width(5.dp))
+//                Text(
+//                    text = "Автор: Имя",
+//                    //modifier = Modifier.padding(10.dp),
+//                    fontFamily = fontFamily,
+//                    style = CustomTextStyles.body1_regular,
+//                    maxLines = 1,
+//                    overflow = TextOverflow.Ellipsis
+//                )
+//            }
             Spacer(Modifier.height(10.dp))
             Text(
                 text = name,

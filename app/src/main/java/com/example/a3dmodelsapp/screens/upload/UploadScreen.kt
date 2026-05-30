@@ -53,6 +53,7 @@ import com.example.a3dmodelsapp.ui.theme.textColor
 import com.example.a3dmodelsapp.ui.theme.textFieldTip
 import kotlinx.coroutines.launch
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -70,6 +71,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.a3dmodelsapp.database.ApiClient
+import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.output.ByteArrayOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
@@ -138,8 +140,8 @@ fun UploadScreen(userLogin: String) {
 
             bitmap = renderer.renderGlbToBitmap(
                 uri,
-                512,
-                512,
+                1024,
+                1024,
                 -45f
             )
 
@@ -241,9 +243,10 @@ fun UploadScreen(userLogin: String) {
             )
 
             BasicTextField(
+                singleLine = true,
                 value = name,
                 onValueChange = { newText ->
-                    if (newText.length <= 200) {
+                    if (newText.length <= 25) {
                         name = newText
                     }
                 },
@@ -426,7 +429,8 @@ fun UploadScreen(userLogin: String) {
                             uri = selectedUri!!,
                             name = name,
                             description = desc,
-                            userLogin = userLogin
+                            userLogin = userLogin,
+                            bitmap = bitmap
                         )
 
                         uploadedUrl = result ?: ""
@@ -444,6 +448,7 @@ fun UploadScreen(userLogin: String) {
                             e.message,
                             Toast.LENGTH_LONG
                         ).show()
+                        e.message?.let { Log.e("ERROR",it) }
                     }
 
                     isUploading = false
@@ -493,6 +498,7 @@ suspend fun uploadModel(
     name: String,
     description: String,
     userLogin: String,
+    bitmap: Bitmap?
 
 ): String? {
 
@@ -516,6 +522,26 @@ suspend fun uploadModel(
             requestFile
         )
 
+    val stream = ByteArrayOutputStream()
+
+    bitmap?.compress(
+        Bitmap.CompressFormat.PNG,
+        100,
+        stream
+    )
+
+    val pngBytes = stream.toByteArray()
+
+    val previewRequestBody =
+        pngBytes.toRequestBody("image/png".toMediaType())
+
+    val previewPart =
+        MultipartBody.Part.createFormData(
+            "preview",
+            "preview.png",
+            previewRequestBody
+        )
+
     val nameBody =
         name.toRequestBody("text/plain".toMediaType())
 
@@ -527,6 +553,7 @@ suspend fun uploadModel(
 
     val response =
         ApiClient.fileApi.uploadFile(
+            previewPart,
             filePart,
             nameBody,
             descBody,

@@ -12,14 +12,10 @@ interface FileApi {
     @Multipart
     @POST("upload")
     suspend fun uploadFile(
-
-        @Part file: MultipartBody.Part,
-
+        @Part preview: MultipartBody.Part,  // Убрали "preview" из аннотации
+        @Part file: MultipartBody.Part,     // Убрали "file" из аннотации
         @Part("name") name: RequestBody,
-
         @Part("description") description: RequestBody,
-
         @Part("userLogin") userLogin: RequestBody
-
     ): Response<UploadResponse>
 }

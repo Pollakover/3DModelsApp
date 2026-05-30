@@ -16,7 +16,7 @@ composeMaterial3 = "1.6.2"
 materialIconsExtended = "1.7.8"
 navigationRuntimeKtx = "2.9.8"
 navigationCompose = "2.9.8"
-sceneview = "4.15.2"
+sceneview = "4.16.10"
 ui = "1.11.2"
 okhttp = "5.3.2"
 retrofit = "3.0.0"
@@ -24,12 +24,10 @@ coilCompose = "2.7.0"
 converterGson = "3.0.0"
 gson = "2.14.0"
 googleGmsGoogleServices = "4.4.4"
-firebaseStorage = "22.0.1"
-transportRuntime = "4.1.1"
-firebaseAppdistributionGradle = "5.2.1"
 runtime = "1.11.2"
 playServicesGames = "24.0.0"
 uiTextGoogleFonts = "1.11.2"
+firebaseCrashlyticsBuildtools = "3.0.7"
 
 [libraries]
 androidx-compose-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "materialIconsExtended" }
@@ -65,12 +63,10 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 sceneview = { module = "io.github.sceneview:sceneview", version.ref = "sceneview" }
-transport-runtime = { group = "com.google.android.datatransport", name = "transport-runtime", version.ref = "transportRuntime" }
-firebase-appdistribution-gradle = { group = "com.google.firebase", name = "firebase-appdistribution-gradle", version.ref = "firebaseAppdistributionGradle" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
 play-services-games = { group = "com.google.android.gms", name = "play-services-games", version.ref = "playServicesGames" }
+firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

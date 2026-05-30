@@ -173,7 +173,7 @@ fun ViewerScreen(MINavController: NavController) {
         }
     }
 
-    val modelUrl = "http://192.168.1.6:8080/files/Duck.glb"
+    val modelUrl = "http://192.168.1.6:8080/files/models/1780176061303.glb"
 
     // Состояние модели
     val modelInstanceState = remember {

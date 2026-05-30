@@ -49,7 +49,9 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.a3dmodelsapp.ui.theme.borderColor
+import com.example.a3dmodelsapp.ui.theme.primary
 import com.example.a3dmodelsapp.ui.theme.test
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,18 +113,32 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
         ) {
 
             ElevatedCard(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = primary
+                ),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
             ) {
                 Box(modifier = Modifier.height(200.dp)) {
 
-                    Image(
-                        painter = painterResource(R.drawable.render),
-                        contentDescription = "Logo",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize(),
+                    AsyncImage(
+                        model = "http://192.168.1.6:8080/files/previews/1780178213368.png",
+                        contentDescription = "Model Preview",
+                        modifier = Modifier
+                            .fillMaxSize().clip(RoundedCornerShape(20.dp)),
+                        contentScale = ContentScale.FillWidth,
+                        placeholder = painterResource(R.drawable.cube),
+                        error = painterResource(R.drawable.cube)
                     )
+
+//                    Image(
+//                        painter = painterResource(R.drawable.render),
+//                        contentDescription = "Logo",
+//                        contentScale = ContentScale.Crop,
+//                        modifier = Modifier.fillMaxSize(),
+//                    )
 
                     Box(
                         modifier = Modifier
@@ -131,7 +147,7 @@ fun InfoScreen(rootNavController: NavController, MINavController: NavController)
                                 Brush.verticalGradient(
                                     colors = listOf(
                                         Color.Transparent,
-                                        Color.Black
+                                        backgroundColor
                                     ),
                                     startY = 290f
                                 )
