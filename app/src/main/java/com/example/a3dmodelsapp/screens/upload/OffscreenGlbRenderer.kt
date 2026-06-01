@@ -206,18 +206,12 @@ class OffscreenGlbRenderer(
 
         val width = box.halfExtent[0] * 2f
         val height = box.halfExtent[1] * 2f
-        val depth = box.halfExtent[2] * 2f
-
-        val fileSizeBytes =
-            context.contentResolver.openAssetFileDescriptor(uri, "r")
-                ?.length ?: 0L
+        val length = box.halfExtent[2] * 2f
 
         val result = ModelInfo(
-            fileSizeMb = fileSizeBytes / 1024f / 1024f,
-
             width = width,
             height = height,
-            depth = depth,
+            length = length,
         )
 
         assetLoader.destroyAsset(asset)

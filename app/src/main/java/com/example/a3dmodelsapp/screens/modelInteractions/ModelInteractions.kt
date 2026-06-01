@@ -1,23 +1,22 @@
 package com.example.a3dmodelsapp.screens.modelInteractions
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.a3dmodelsapp.screens.catalogue.CatalogueScreen
+import com.example.a3dmodelsapp.database.models.Model
 import com.example.a3dmodelsapp.screens.modelInteractions.info.InfoScreen
 import com.example.a3dmodelsapp.screens.modelInteractions.update.UpdateScreen
 import com.example.a3dmodelsapp.screens.modelInteractions.viewer.ViewerScreen
-import com.example.a3dmodelsapp.screens.upload.UploadScreen
-import com.example.a3dmodelsapp.screens.userInfo.UserInfoScreen
-import com.example.a3dmodelsapp.ui.theme._3DModelsAppTheme
+import com.example.a3dmodelsapp.viewModels.MainViewModel
 
 @Composable
-fun ModelInteractionsNavigation(rootNavController: NavController) {
-
+fun ModelInteractionsNavigation(
+    rootNavController: NavController,
+    model: Model?,
+    viewModel: MainViewModel
+) {
     val MINavController = rememberNavController()
 
     NavHost(
@@ -25,14 +24,17 @@ fun ModelInteractionsNavigation(rootNavController: NavController) {
         startDestination = "info",
     ) {
         composable("info") {
-            InfoScreen(rootNavController, MINavController)
+            InfoScreen(rootNavController, MINavController, viewModel)
         }
         composable("update") {
-            UpdateScreen(MINavController)
+            UpdateScreen(
+                MINavController = MINavController,
+                rootNavController = rootNavController,  // Передаем корневой навигатор
+                viewModel = viewModel
+            )
         }
-
         composable("viewer") {
-            ViewerScreen(MINavController)
+            ViewerScreen(MINavController, model)
         }
     }
 }

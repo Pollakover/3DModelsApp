@@ -1,6 +1,5 @@
 package com.example.a3dmodelsapp
 
-import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,18 +11,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.painterResource
@@ -33,37 +36,24 @@ import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.a3dmodelsapp.screens.catalogue.CatalogueScreen
-import com.example.a3dmodelsapp.screens.modelInteractions.info.InfoScreen
+import com.example.a3dmodelsapp.screens.modelInteractions.ModelInteractionsNavigation
 import com.example.a3dmodelsapp.screens.upload.UploadScreen
 import com.example.a3dmodelsapp.screens.userInfo.UserInfoScreen
+import com.example.a3dmodelsapp.ui.theme.CustomTextStyles
 import com.example.a3dmodelsapp.ui.theme._3DModelsAppTheme
 import com.example.a3dmodelsapp.ui.theme.fontFamily
 import com.example.a3dmodelsapp.ui.theme.primary
+import com.example.a3dmodelsapp.ui.theme.primaryTransparent
 import com.example.a3dmodelsapp.ui.theme.secondary
 import com.example.a3dmodelsapp.ui.theme.test
 import com.example.a3dmodelsapp.ui.theme.textColor
 import com.example.a3dmodelsapp.viewModels.MainViewModel
-import com.example.a3dmodelsapp.ui.theme.CustomTextStyles
-
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalView
-import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.example.a3dmodelsapp.screens.modelInteractions.ModelInteractionsNavigation
-import com.example.a3dmodelsapp.screens.modelInteractions.update.UpdateScreen
-import com.example.a3dmodelsapp.screens.modelInteractions.viewer.ViewerScreen
-import com.example.a3dmodelsapp.ui.theme.primaryTransparent
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -117,7 +107,6 @@ fun MainScreen(
     val scope = rememberCoroutineScope()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
-    UserInfoScreen(userLogin)
 
     Scaffold(
         topBar = {
@@ -125,7 +114,7 @@ fun MainScreen(
                 modifier = Modifier.drawBehind {
                     val strokeWidth = 4.dp.toPx()
                     drawLine(
-                        color = test,
+                        color = primaryTransparent,
                         start = Offset(0f, size.height),
                         end = Offset(size.width, size.height),
                         strokeWidth = strokeWidth
@@ -296,7 +285,7 @@ fun MainScreen(
                     },
                     icon = {
                         Icon(
-                            painter = painterResource(R.drawable.account_box_24px),
+                            painter = painterResource(R.drawable.person),
                             contentDescription = "",
                         )
                     },
@@ -321,9 +310,10 @@ fun MainScreen(
                     onOpenInfo = {
                         rootNavController.navigate("info")
                     },
+                    viewModel = mainViewModel,
                 )
             }
-            composable("upload") { UploadScreen(userLogin) }
+            composable("upload") { UploadScreen(userLogin, mainViewModel, navController) }
             composable("profile") { UserInfoScreen(userLogin) }
         }
     }
@@ -353,7 +343,7 @@ fun RootNavigation(
         }
 
         composable("info") {
-            ModelInteractionsNavigation(rootNavController)
+            ModelInteractionsNavigation(rootNavController, mainViewModel.current_model, mainViewModel)
         }
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,11 +19,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +35,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,8 +52,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.a3dmodelsapp.R
+import com.example.a3dmodelsapp.database.models.Model
 import com.example.a3dmodelsapp.ui.theme.CustomTextStyles
 import com.example.a3dmodelsapp.ui.theme.backgroundColor
 import com.example.a3dmodelsapp.ui.theme.fontFamily
@@ -54,11 +63,11 @@ import com.example.a3dmodelsapp.ui.theme.primary
 import com.example.a3dmodelsapp.ui.theme.secondary
 import com.example.a3dmodelsapp.ui.theme.test
 import com.example.a3dmodelsapp.ui.theme.textColor
+import com.example.a3dmodelsapp.viewModels.MainViewModel
 
 @Composable
-fun ModelCard(name: String, painter: Painter, onOpenInfo: () -> Unit) {
+fun ModelCard(model: Model, painter: Painter, onOpenInfo: () -> Unit, viewModel: MainViewModel, ) {
     Card(
-
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = secondary
@@ -68,17 +77,14 @@ fun ModelCard(name: String, painter: Painter, onOpenInfo: () -> Unit) {
         Column(
         modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
-            .clickable(onClick = { onOpenInfo() })
+            .clickable(onClick = {
+                onOpenInfo()
+                viewModel.current_model = model
+            })
             .padding(10.dp),
         ) {
-//            Image(
-//                painter = painterResource(R.drawable.cube),
-//                contentDescription = "",
-//                modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(primary),
-//                contentScale = ContentScale.FillWidth
-//            )
             AsyncImage(
-                model = "http://192.168.1.6:8080/files/previews/1780178213368.png",
+                model = model.image_url,
                 contentDescription = "Model Preview",
                 modifier = Modifier
                     .clip(RoundedCornerShape(20.dp)),
@@ -86,36 +92,9 @@ fun ModelCard(name: String, painter: Painter, onOpenInfo: () -> Unit) {
                 placeholder = painterResource(R.drawable.cube),
                 error = painterResource(R.drawable.cube)
             )
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Box(
-//                    modifier = Modifier
-//                        //.size(36.dp)
-//                        .clip(CircleShape)
-//                        .background(primary, CircleShape),
-//
-//                ) {
-//                    Icon(
-//                        painter = painterResource(R.drawable.person),
-//                        contentDescription = null,
-//                        tint = backgroundColor,
-//                        modifier = Modifier.size(15.dp)
-//                    )
-//                }
-//                Spacer(Modifier.width(5.dp))
-//                Text(
-//                    text = "Автор: Имя",
-//                    //modifier = Modifier.padding(10.dp),
-//                    fontFamily = fontFamily,
-//                    style = CustomTextStyles.body1_regular,
-//                    maxLines = 1,
-//                    overflow = TextOverflow.Ellipsis
-//                )
-//            }
             Spacer(Modifier.height(10.dp))
             Text(
-                text = name,
+                text = model.name,
                 //modifier = Modifier.padding(10.dp),
                 fontFamily = fontFamily,
                 style = CustomTextStyles.body1_bold,
@@ -126,20 +105,50 @@ fun ModelCard(name: String, painter: Painter, onOpenInfo: () -> Unit) {
     }
 }
 
-val names = listOf("Стул", "Тумбочка", "Полка", "Ваза", "Коврик для гостинной с длинным ворсом")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CatalogueScreen(onOpenInfo: () -> Unit) {
-    LazyVerticalStaggeredGrid(
-        modifier = Modifier.padding(20.dp),
-        columns = StaggeredGridCells.Fixed(2),
-        verticalItemSpacing = 20.dp,
-        horizontalArrangement = Arrangement.spacedBy(20.dp),
-        content = {
-            items(names) { name ->
-                ModelCard(name, painterResource(R.drawable.upload_24px), { onOpenInfo() })
+fun CatalogueScreen(onOpenInfo: () -> Unit, viewModel: MainViewModel) {
+    val listState = rememberLazyStaggeredGridState()
+    val models by viewModel._models.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.loadModels()
+    }
+
+    // Восстанавливаем позицию при первом запуске
+    LaunchedEffect(Unit) {
+        viewModel.restoreScrollPosition(listState)
+    }
+
+    // Сохраняем позицию при прокрутке
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }
+            .collect { (index, offset) ->
+                viewModel.saveScrollPosition(index, offset)
             }
+    }
+
+    if (isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
         }
-    )
+    } else if (viewModel.error) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(text = "Ошибка загрузки", color = MaterialTheme.colorScheme.error)
+        }
+    } else {
+        LazyVerticalStaggeredGrid(
+            state = listState,
+            modifier = Modifier.padding(20.dp),
+            columns = StaggeredGridCells.Fixed(2),
+            verticalItemSpacing = 20.dp,
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+            content = {
+                items(models) { model ->
+                    ModelCard(model, painterResource(R.drawable.upload_24px), { onOpenInfo() }, viewModel)
+                }
+            }
+        )
+    }
 }

@@ -1,5 +1,7 @@
 package com.example.a3dmodelsapp.database
 
+import com.example.a3dmodelsapp.database.categories.CategoryApi
+import com.example.a3dmodelsapp.database.models.ModelApi
 import com.example.a3dmodelsapp.screens.login.AuthApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,5 +16,7 @@ object ApiClient {
 
     val authApi : AuthApi = retrofit.create(AuthApi::class.java)
 
-    val fileApi: FileApi = retrofit.create(FileApi::class.java)
+    val modelApi: ModelApi = retrofit.create(ModelApi::class.java)
+
+    val categoryApi: CategoryApi = retrofit.create(CategoryApi::class.java)
 }

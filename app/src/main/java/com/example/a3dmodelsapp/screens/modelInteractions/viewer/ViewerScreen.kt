@@ -32,8 +32,6 @@ import com.example.a3dmodelsapp.ui.theme.primary
 import com.example.a3dmodelsapp.ui.theme.primaryTransparent
 import com.example.a3dmodelsapp.ui.theme.textColor
 import io.github.sceneview.SceneView
-import io.github.sceneview.rememberModelInstance
-
 import androidx.compose.runtime.DisposableEffect
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -66,9 +64,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
+import com.example.a3dmodelsapp.database.models.Model
 import com.example.a3dmodelsapp.ui.theme.borderColor
 import com.example.a3dmodelsapp.ui.theme.secondary
 import com.example.a3dmodelsapp.ui.theme.textFieldTip
+import com.example.a3dmodelsapp.viewModels.MainViewModel
 import com.google.android.filament.LightManager
 import io.github.sceneview.rememberEngine
 import io.github.sceneview.rememberEnvironment
@@ -86,7 +86,7 @@ import java.net.URL
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ViewerScreen(MINavController: NavController) {
+fun ViewerScreen(MINavController: NavController, model: Model?) {
 
     val colors = listOf(
         Color(255, 201, 7),
@@ -173,7 +173,7 @@ fun ViewerScreen(MINavController: NavController) {
         }
     }
 
-    val modelUrl = "http://192.168.1.6:8080/files/models/1780176061303.glb"
+    val modelUrl = model?.file_url
 
     // Состояние модели
     val modelInstanceState = remember {
@@ -638,7 +638,7 @@ fun ViewerScreen(MINavController: NavController) {
 
 suspend fun downloadGlbFile(
     context: Context,
-    url: String
+    url: String?
 ): File {
 
     return withContext(Dispatchers.IO) {
