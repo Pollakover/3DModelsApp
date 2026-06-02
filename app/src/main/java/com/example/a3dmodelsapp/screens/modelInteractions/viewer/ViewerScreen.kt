@@ -18,7 +18,6 @@ import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -63,31 +62,56 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import com.example.a3dmodelsapp.database.models.Model
 import com.example.a3dmodelsapp.ui.theme.borderColor
 import com.example.a3dmodelsapp.ui.theme.secondary
 import com.example.a3dmodelsapp.ui.theme.textFieldTip
 import com.example.a3dmodelsapp.viewModels.MainViewModel
 import com.google.android.filament.LightManager
+import com.google.android.filament.Skybox
+import com.google.android.filament.utils.KTX1Loader
+import io.github.sceneview.DEFAULT_IBL_INTENSITY
+import io.github.sceneview.createEnvironment
+import io.github.sceneview.environment.Environment
+import io.github.sceneview.math.Direction
+import io.github.sceneview.math.Position
+import io.github.sceneview.math.colorOf
 import io.github.sceneview.rememberEngine
 import io.github.sceneview.rememberEnvironment
 import io.github.sceneview.rememberEnvironmentLoader
 import io.github.sceneview.rememberMainLightNode
 import io.github.sceneview.rememberMaterialLoader
+import io.github.sceneview.rememberModelInstance
 import io.github.sceneview.rememberModelLoader
 import io.github.sceneview.rememberRenderer
 import io.github.sceneview.rememberScene
 import io.github.sceneview.rememberView
+import io.github.sceneview.utils.readBuffer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.net.URL
+import java.nio.Buffer
+import java.nio.ByteBuffer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViewerScreen(MINavController: NavController, model: Model?) {
 
+    val context = LocalContext.current
+    // Filament 3D Engine
+    val engine = rememberEngine()
+
+    // Asset loaders
+    val modelLoader = rememberModelLoader(engine)
+    val materialLoader = rememberMaterialLoader(engine)
+    val environmentLoader = rememberEnvironmentLoader(engine)
+
+
+    //LIGHT///////////////////////////////////////////////////////////////////////////////////////////////////
     val colors = listOf(
         Color(255, 201, 7),
         Color(255, 254, 242),
@@ -108,14 +132,30 @@ fun ViewerScreen(MINavController: NavController, model: Model?) {
 
     var selectedType by remember { mutableStateOf(lightTypes[0]) }
 
+    val lightPosition = remember { Position(0f, 1.4f, 1.0f) }
+
+    var intensity by remember { mutableFloatStateOf(30_000f) }
+    var showLightSource by remember { mutableStateOf(true) }
+
+    val sourceMaterial = rememberMaterialInstance(
+        materialLoader,
+        color = selectedColor,
+        metallic = 0.0f,
+        roughness = 0.0f,
+    )
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     data class EnvOption(val label: String, val file: String)
 
     val environments = remember {
         listOf(
             EnvOption("Кухня", "envs/studio_2k.hdr"),
             EnvOption("Ванная", "envs/studio_warm_2k.hdr"),
-            EnvOption("Гостинная", "envs/outdoor_cloudy_2k.hdr"),
-            EnvOption("Спальня", "envs/chinese_garden_2k.hdr"),
+            EnvOption("Гостинная", "envs/lythwood_lounge_2k.hdr"),
+            EnvOption("Улица", "envs/chinese_garden_2k.hdr"),
+            EnvOption("Белый фон", "envs/neutral/neutral_ibl.ktx"),
+            EnvOption("Чёрный фон", "envs/neutral/neutral_ibl.ktx"),
 //            EnvOption("Sunset", "environments/sunset_2k.hdr"),
 //            EnvOption("Rooftop Night", "environments/rooftop_night_2k.hdr"),
 //            EnvOption("Night Sky", "environments/night_sky_2k.hdr")
@@ -124,11 +164,11 @@ fun ViewerScreen(MINavController: NavController, model: Model?) {
 
     var selectedEnv by remember { mutableStateOf(environments[0]) }
 
-    data class IntensityOption(val label: String, val lux: Float?)
+    data class IntensityOption(val label: String, val lux: Float)
 
     val intensities = remember {
         listOf(
-            IntensityOption("По умолчанию", null),
+            IntensityOption("По умолчанию", 10_000f),
             IntensityOption("Ярко", 30_000f),
             IntensityOption("Тускло", 3_000f),
         )
@@ -136,25 +176,142 @@ fun ViewerScreen(MINavController: NavController, model: Model?) {
 
     var selectedIntensity by remember { mutableStateOf(intensities[0]) }
 
-    // Filament 3D Engine
-    val engine = rememberEngine()
-
-    // Asset loaders
-    val modelLoader = rememberModelLoader(engine)
-    val materialLoader = rememberMaterialLoader(engine)
-    val environmentLoader = rememberEnvironmentLoader(engine)
-
     val backgroundSheetState = rememberModalBottomSheetState()
     val lightSheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showLightBottomSheet by remember { mutableStateOf(false) }
     var showBackgroundBottomSheet by remember { mutableStateOf(false) }
 
-    var intensity by remember { mutableFloatStateOf(30_000f) }
-    var showLightSource by remember { mutableStateOf(true) }
-
     val view = LocalView.current
     val activity = view.context as Activity
+
+    val white_environment = createEnvironment(
+        engine = engine,
+        indirectLight = KTX1Loader.createIndirectLight(
+            engine,
+            context.assets.readBuffer("envs/neutral/neutral_ibl.ktx"),
+        ).indirectLight?.also { it.intensity = selectedIntensity.lux },
+        skybox = Skybox.Builder()
+        .color(colorOf(rgb = 1.0f, a = 1.0f).toFloatArray())
+        .build(engine),
+    )
+
+
+    val black_environment = createEnvironment(
+        engine = engine,
+        indirectLight = KTX1Loader.createIndirectLight(
+            engine,
+            context.assets.readBuffer("envs/neutral/neutral_ibl.ktx"),
+        ).indirectLight?.also { it.intensity = selectedIntensity.lux },
+        skybox = Skybox.Builder()
+            .color(colorOf(rgb = 0.0f, a = 1.0f).toFloatArray())
+            .build(engine),
+    )
+
+    val environment: Environment = remember(environmentLoader, selectedEnv, selectedIntensity) {
+
+        when {
+            selectedEnv.label == "Белый фон" ->
+                environmentLoader.createEnvironment(
+                indirectLight = KTX1Loader.createIndirectLight(
+                    engine,
+                    context.assets.readBuffer("envs/neutral/neutral_ibl.ktx"),
+                ).indirectLight?.also { it.intensity = selectedIntensity.lux },
+                skybox = Skybox.Builder()
+                    .color(colorOf(rgb = 1.0f, a = 1.0f).toFloatArray())
+                    .build(engine),
+                )
+            selectedEnv.label == "Чёрный фон" ->
+                environmentLoader.createEnvironment(
+                    indirectLight = KTX1Loader.createIndirectLight(
+                        engine,
+                        context.assets.readBuffer("envs/neutral/neutral_ibl.ktx"),
+                    ).indirectLight?.also { it.intensity = selectedIntensity.lux },
+                    skybox = Skybox.Builder()
+                        .color(colorOf(rgb = 0.0f, a = 1.0f).toFloatArray())
+                        .build(engine),
+                )
+            else ->
+                environmentLoader.createHDREnvironment(
+                    assetFileLocation = selectedEnv.file,
+                    indirectLightApply = {
+                        intensity(selectedIntensity.lux)
+                    },
+                    createSkybox = true
+                ) ?: environmentLoader.createEnvironment()
+
+        }
+
+
+//        environmentLoader.createHDREnvironment(
+//            assetFileLocation = selectedEnv.file,
+//            indirectLightApply = {
+//                intensity(selectedIntensity.lux)
+//            },
+//            createSkybox = false
+//        ) ?: environmentLoader.createEnvironment()
+
+//        environmentLoader.createKTX1Environment(
+//            iblAssetFile = "envs/neutral/neutral_ibl.ktx",
+//        )
+
+//        environmentLoader.createEnvironment(
+//                //engine = engine,
+//                indirectLight = KTX1Loader.createIndirectLight(
+//                    engine,
+//                    context.assets.readBuffer("envs/neutral/neutral_ibl.ktx"),
+//                ).indirectLight?.also { it.intensity = selectedIntensity.lux },
+//                skybox = Skybox.Builder()
+//                    .color(colorOf(rgb = 0.0f, a = 1.0f).toFloatArray())
+//                    .build(engine),
+//            )
+
+//        environmentLoader.createHDREnvironment(
+//                assetFileLocation = selectedEnv.file,
+//                indirectLightApply = {
+//                    intensity(selectedIntensity.lux)
+//                },
+//                createSkybox = true
+//        ) ?: environmentLoader.createEnvironment()
+
+//        if (selectedEnv.label == "Белый фон") {
+//            // Создаем пустое окружение с черным фоном
+//            environmentLoader.createEnvironment(
+//                //engine = engine,
+//                indirectLight = KTX1Loader.createIndirectLight(
+//                    engine,
+//                    context.assets.readBuffer("envs/neutral/neutral_ibl.ktx"),
+//                ).indirectLight?.also { it.intensity = selectedIntensity.lux },
+//                skybox = Skybox.Builder()
+//                    .color(colorOf(rgb = 1.0f, a = 1.0f).toFloatArray())
+//                    .build(engine),
+//            )
+//        }
+//        (if (selectedEnv.label == "Чёрный фон") {
+//            createEnvironment(
+//                engine = engine,
+//                indirectLight = KTX1Loader.createIndirectLight(
+//                    engine,
+//                    context.assets.readBuffer("envs/neutral/neutral_ibl.ktx"),
+//                ).indirectLight?.also { it.intensity = selectedIntensity.lux },
+//                skybox = Skybox.Builder()
+//                    .color(colorOf(rgb = 0.0f, a = 1.0f).toFloatArray())
+//                    .build(engine),
+//            )
+//        } else {
+//            // Загружаем HDR окружение
+//            environmentLoader.createHDREnvironment(
+//                assetFileLocation = selectedEnv.file,
+//                indirectLightApply = {
+//                    intensity(selectedIntensity.lux)
+//                },
+//                createSkybox = false
+//            ) ?: environmentLoader.createEnvironment()
+//        }) as Environment
+    }
+    DisposableEffect(environment) {
+        onDispose { environmentLoader.destroyEnvironment(environment) }
+    }
 
     DisposableEffect(Unit) {
 
@@ -228,18 +385,13 @@ fun ViewerScreen(MINavController: NavController, model: Model?) {
                 materialLoader = materialLoader,
                 environmentLoader = environmentLoader,
 
-                mainLightNode = rememberMainLightNode(engine) {
-                    intensity = intensity
-                },
+//                mainLightNode = rememberMainLightNode(engine) {
+//                    intensity = intensity
+//                },
+                environment = environment,
+                mainLightNode = null,
 
-                environment = rememberEnvironment(environmentLoader) {
-                    environmentLoader.createHDREnvironment(
-                        assetFileLocation = selectedEnv.file
-                    )!!
-                }
-
-            ) {
-
+                ) {
                 modelInstanceState.value?.let { instance ->
 
                     ModelNode(
@@ -248,7 +400,48 @@ fun ViewerScreen(MINavController: NavController, model: Model?) {
                         autoAnimate = true
                     )
                 }
+
+                if (selectedType.type != LightManager.Type.DIRECTIONAL) {
+                    SphereNode(
+                        materialInstance = sourceMaterial,
+                        radius = 0.05f,
+                        position = lightPosition,
+                    )
+                }
+
+                LightNode(
+                    type = selectedType.type,
+                    intensity = intensity,
+                    color = colorOf(
+                        r = selectedColor.red,
+                        g = selectedColor.green,
+                        b = selectedColor.blue
+                    ),
+                    // Direction points from lightPosition toward the helmet at origin so
+                    // the spot cone hits the helmet front and the wall behind, making the
+                    // disc clearly visible. Used for Directional + Spot.
+                    direction = Direction(0f, -1.4f, -1.0f),
+                    position = lightPosition,
+                    apply = {
+                        // Spot: very narrow cone (≈11° outer) so the disc on the wall
+                        // reads as a sharp circle, not a wide wash. Falloff 4 m keeps
+                        // the cone visible all the way to the backdrop wall.
+                        // Point: aggressive 2 m falloff so the wall shows the radial
+                        // gradient (helmet front bright, wall corners dark).
+                        if (selectedType.type == LightManager.Type.FOCUSED_SPOT) {
+                            spotLightCone(0.05f, 0.2f)
+                            falloff(4f)
+                        } else if (selectedType.type == LightManager.Type.POINT) {
+                            falloff(2.5f)
+                        }
+                    }
+                )
             }
+//            SceneView(modifier = Modifier.fillMaxSize()) {
+//                rememberModelInstance(modelLoader, "models/helmet.glb")?.let {
+//                    ModelNode(modelInstance = it, scaleToUnits = 1.0f, autoAnimate = true)
+//                }
+//            }
 
             if (isLoading) {
                 Box(
@@ -271,7 +464,6 @@ fun ViewerScreen(MINavController: NavController, model: Model?) {
                             modifier = Modifier.padding(top = 12.dp)
                         )
 
-                        // 👇 КНОПКА НАЗАД ВНУТРИ ОВЕРЛЕЯ
                         IconButton(
                             onClick = { MINavController.popBackStack() },
                             modifier = Modifier.padding(top = 20.dp),
@@ -301,10 +493,11 @@ fun ViewerScreen(MINavController: NavController, model: Model?) {
                         Row(
                             Modifier
                                 .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Start
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             IconButton(
-                                shape = RoundedCornerShape(20.dp),
+                                shape = CircleShape,
                                 colors = IconButtonColors(
                                     containerColor = backgroundColor.copy(alpha = 0.3f),
                                     contentColor = textColor,
@@ -535,7 +728,11 @@ fun ViewerScreen(MINavController: NavController, model: Model?) {
                                         .background(preset, CircleShape)
                                         .then(
                                             if (selectedColor == preset) {
-                                                Modifier.border(3.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                                                Modifier.border(
+                                                    3.dp,
+                                                    MaterialTheme.colorScheme.primary,
+                                                    CircleShape
+                                                )
                                             } else Modifier
                                         )
                                         .clickable { selectedColor = preset }
@@ -635,6 +832,19 @@ fun ViewerScreen(MINavController: NavController, model: Model?) {
         }
     }
 }
+
+fun readAsset(name: String, context: Context): ByteBuffer {
+
+    val bytes = context.assets.open(name)
+        .use { it.readBytes() }
+
+    return ByteBuffer.allocateDirect(bytes.size)
+        .apply {
+            put(bytes)
+            flip()
+        }
+}
+
 
 suspend fun downloadGlbFile(
     context: Context,

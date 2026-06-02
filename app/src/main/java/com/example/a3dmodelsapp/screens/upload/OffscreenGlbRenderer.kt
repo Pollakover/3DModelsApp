@@ -296,7 +296,7 @@ class OffscreenGlbRenderer(
         tm.setTransform(instance, matrix)
     }
 
-    private fun readAsset(name: String): ByteBuffer {
+    fun readAsset(name: String): ByteBuffer {
 
         val bytes = context.assets.open(name)
             .use { it.readBytes() }
