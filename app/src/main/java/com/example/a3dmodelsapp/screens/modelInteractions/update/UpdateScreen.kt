@@ -17,8 +17,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -46,9 +44,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -65,7 +63,6 @@ import com.example.a3dmodelsapp.ui.theme.backgroundColor
 import com.example.a3dmodelsapp.ui.theme.borderColor
 import com.example.a3dmodelsapp.ui.theme.fontFamily
 import com.example.a3dmodelsapp.ui.theme.primary
-import com.example.a3dmodelsapp.ui.theme.primaryTransparent
 import com.example.a3dmodelsapp.ui.theme.secondary
 import com.example.a3dmodelsapp.ui.theme.textColor
 import com.example.a3dmodelsapp.ui.theme.textFieldTip
@@ -92,15 +89,12 @@ fun UpdateScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                modifier = Modifier.drawBehind {
-                    val strokeWidth = 4.dp.toPx()
-                    drawLine(
-                        color = primaryTransparent,
-                        start = Offset(0f, size.height),
-                        end = Offset(size.width, size.height),
-                        strokeWidth = strokeWidth
-                    )
-                },
+                modifier = Modifier
+                    .shadow(
+                        elevation = 6.dp,
+                        shape = RectangleShape,
+                        clip = false
+                    ),
                 colors = TopAppBarColors(
                     containerColor = secondary,
                     scrolledContainerColor = secondary,
@@ -110,7 +104,7 @@ fun UpdateScreen(
                     subtitleContentColor = textColor
                 ),
                 navigationIcon = {
-                    IconButton(onClick = { MINavController.navigate("catalogue") }) {
+                    IconButton(onClick = { MINavController.popBackStack() }) {
                         Icon(
                             painterResource(id = R.drawable.arrow_back_24px),
                             contentDescription = "/."
@@ -168,9 +162,9 @@ fun UpdateScreen(
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontSize = 16.sp,
-                            lineHeight = 24.sp,
+                            color = textColor,
+                            fontSize = 14.sp,
+                            lineHeight = 20.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = fontFamily
                         ),
@@ -221,9 +215,9 @@ fun UpdateScreen(
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontSize = 16.sp,
-                            lineHeight = 24.sp,
+                            color = textColor,
+                            fontSize = 14.sp,
+                            lineHeight = 20.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = fontFamily
                         ),
@@ -320,7 +314,8 @@ fun UpdateScreen(
                     },
                     shape = CircleShape,
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    elevation = ButtonDefaults.elevatedButtonElevation(4.dp)
 
                 ) {
                     Row(
@@ -347,7 +342,12 @@ fun UpdateScreen(
                 containerColor = primary,
                 contentColor = backgroundColor,
             ) {
-                Icon(Icons.Outlined.Delete, null)
+                Icon(
+                    painterResource(R.drawable.delete_24px),
+                    contentDescription = "Очистить поиск",
+                    tint = backgroundColor,
+                    modifier = Modifier.size(24.dp)
+                )
             }
             if (deleteDialogState.value) {
                 DeleteDialog(
@@ -394,7 +394,7 @@ fun DeleteDialog(
                             )
                         } else {
                             Icon(
-                                imageVector = Icons.Outlined.Delete,
+                                painterResource(R.drawable.delete_24px),
                                 contentDescription = "",
                                 tint = primary,
                                 modifier = Modifier.size(30.dp)

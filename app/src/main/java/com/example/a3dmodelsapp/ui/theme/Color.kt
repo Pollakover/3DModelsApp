@@ -1,6 +1,5 @@
 package com.example.a3dmodelsapp.ui.theme
 
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -34,3 +33,5 @@ val success = Color(0xFF91F36A)
 val warning = Color(0xFFF79009)
 
 val error = Color(0xFFF36A6A)
+
+val transparent = primary.copy(alpha = 0.0f)

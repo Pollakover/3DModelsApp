@@ -5,7 +5,6 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,12 +50,13 @@ import com.example.a3dmodelsapp.database.ApiClient
 import com.example.a3dmodelsapp.screens.login.AuthResponse
 import com.example.a3dmodelsapp.screens.login.RegisterRequest
 import com.example.a3dmodelsapp.screens.login.Screen
+import com.example.a3dmodelsapp.screens.login.loginScreen.loginUser
 import com.example.a3dmodelsapp.ui.theme.CustomTextStyles
 import com.example.a3dmodelsapp.ui.theme.borderColor
 import com.example.a3dmodelsapp.ui.theme.fontFamily
 import com.example.a3dmodelsapp.ui.theme.primary
 import com.example.a3dmodelsapp.ui.theme.secondary
-
+import com.example.a3dmodelsapp.ui.theme.textFieldTip
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -118,11 +118,6 @@ fun SignUpScreen(navController: NavController) {
                             text = "Создайте аккаунт",
                             style = CustomTextStyles.heading_large
                         )
-//                        Text(
-//                            text = "Заполните поля для регистрации.",
-//                            style = CustomTextStyles.body1_regular,
-//                        )
-                        //Поля ввода, кнопка, нижний текст
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -156,8 +151,8 @@ fun SignUpScreen(navController: NavController) {
                                         .padding(14.dp, 10.dp, 14.dp, 10.dp),
                                     textStyle = TextStyle(
                                         color = MaterialTheme.colorScheme.onSurface,
-                                        fontSize = 16.sp,
-                                        lineHeight = 24.sp,
+                                        fontSize = 14.sp,
+                                        lineHeight = 20.sp,
                                         fontWeight = FontWeight.Normal,
                                         fontFamily = fontFamily
                                     ),
@@ -170,6 +165,8 @@ fun SignUpScreen(navController: NavController) {
                                             if (login.isEmpty()) {
                                                 Text(
                                                     text = "Введите логин",
+                                                    fontFamily = fontFamily,
+                                                    color = textFieldTip,
                                                     style = CustomTextStyles.body1_regular
                                                 )
                                             }
@@ -206,8 +203,8 @@ fun SignUpScreen(navController: NavController) {
                                         .padding(14.dp, 10.dp, 14.dp, 10.dp),
                                     textStyle = TextStyle(
                                         color = MaterialTheme.colorScheme.onSurface,
-                                        fontSize = 16.sp,
-                                        lineHeight = 24.sp,
+                                        fontSize = 14.sp,
+                                        lineHeight = 20.sp,
                                         fontWeight = FontWeight.Normal,
                                         fontFamily = fontFamily
                                     ),
@@ -220,6 +217,8 @@ fun SignUpScreen(navController: NavController) {
                                             if (email.isEmpty()) {
                                                 Text(
                                                     text = "Введите e-mail",
+                                                    fontFamily = fontFamily,
+                                                    color = textFieldTip,
                                                     style = CustomTextStyles.body1_regular
                                                 )
                                             }
@@ -256,8 +255,8 @@ fun SignUpScreen(navController: NavController) {
                                         .padding(14.dp, 10.dp, 14.dp, 10.dp),
                                     textStyle = TextStyle(
                                         color = MaterialTheme.colorScheme.onSurface,
-                                        fontSize = 16.sp,
-                                        lineHeight = 24.sp,
+                                        fontSize = 14.sp,
+                                        lineHeight = 20.sp,
                                         fontWeight = FontWeight.Normal,
                                         fontFamily = fontFamily
                                     ),
@@ -270,6 +269,8 @@ fun SignUpScreen(navController: NavController) {
                                             if (password.isEmpty()) {
                                                 Text(
                                                     text = "Придумайте пароль",
+                                                    fontFamily = fontFamily,
+                                                    color = textFieldTip,
                                                     style = CustomTextStyles.body1_regular
                                                 )
                                             }
@@ -290,6 +291,7 @@ fun SignUpScreen(navController: NavController) {
                                 shape = CircleShape,
                                 modifier = Modifier
                                     .fillMaxWidth(),
+                                elevation = ButtonDefaults.elevatedButtonElevation(4.dp)
                             ) {
                                 Text(
                                     "Зарегистрироваться",
@@ -327,7 +329,8 @@ fun SignUpScreen(navController: NavController) {
                         .clickable {
                             val intent = Intent(context1, MainActivity::class.java).apply {
                                 putExtra("", "")
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                flags =
+                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             }
                             context1.startActivity(intent)
                         }
@@ -354,6 +357,7 @@ private fun registerUser(login: String, password: String, email: String, context
         override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
             if (response.isSuccessful) {
                 Toast.makeText(context, "Успешная регистрация", Toast.LENGTH_SHORT).show()
+                loginUser(login, password, context)
             } else {
                 Toast.makeText(context, "Ошибка регистрации", Toast.LENGTH_SHORT).show()
             }
@@ -392,8 +396,7 @@ fun checkFields(
     } else {
         if (email.isValidEmail()) {
             return true
-        }
-        else {
+        } else {
             Toast.makeText(context, "Некорректный email", Toast.LENGTH_SHORT).show()
             return false
         }

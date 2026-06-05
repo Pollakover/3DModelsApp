@@ -2,7 +2,7 @@ package com.example.a3dmodelsapp.database.models
 
 data class Model(
     val id: Int,
-    val name: String,
+    override val name: String,
     val description: String,
     val width: Double,
     val height: Double,
@@ -11,4 +11,4 @@ data class Model(
     val file_url: String,
     val image_url: String,
     val user_login: String,
-)
+): Searchable

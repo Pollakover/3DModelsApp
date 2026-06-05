@@ -6,11 +6,22 @@ import android.graphics.SurfaceTexture
 import android.net.Uri
 import android.opengl.Matrix
 import android.view.Surface
-import com.google.android.filament.*
-import com.google.android.filament.gltfio.*
-import java.nio.ByteBuffer
 import androidx.core.graphics.createBitmap
+import com.google.android.filament.Camera
+import com.google.android.filament.ColorGrading
+import com.google.android.filament.Engine
+import com.google.android.filament.EntityManager
+import com.google.android.filament.LightManager
+import com.google.android.filament.SwapChain
+import com.google.android.filament.Texture
+import com.google.android.filament.View
+import com.google.android.filament.Viewport
+import com.google.android.filament.gltfio.AssetLoader
+import com.google.android.filament.gltfio.FilamentAsset
+import com.google.android.filament.gltfio.ResourceLoader
+import com.google.android.filament.gltfio.UbershaderProvider
 import com.google.android.filament.utils.KTX1Loader
+import java.nio.ByteBuffer
 
 class OffscreenGlbRenderer(
     private val context: Context
@@ -109,7 +120,7 @@ class OffscreenGlbRenderer(
 
         val ibl = KTX1Loader.createIndirectLight(
             engine,
-            readAsset("envs/venetian_crossroads_2k/venetian_crossroads_2k_ibl.ktx")
+            readAsset("envs/neutral/neutral_ibl.ktx")
         )
 
         ibl.indirectLight?.intensity = 30_000f

@@ -1,13 +1,11 @@
 package com.example.a3dmodelsapp.screens.login
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.Navigation
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.a3dmodelsapp.screens.login.signUpScreen.SignUpScreen
 import com.example.a3dmodelsapp.screens.login.loginScreen.LoginScreen
-import com.example.a3dmodelsapp.screens.login.Screen
+import com.example.a3dmodelsapp.screens.login.signUpScreen.SignUpScreen
 
 @Composable
 fun Navigation() {

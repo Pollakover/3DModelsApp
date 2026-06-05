@@ -52,7 +52,6 @@ import com.example.a3dmodelsapp.ui.theme.primary
 import com.example.a3dmodelsapp.ui.theme.secondary
 import com.example.a3dmodelsapp.ui.theme.textColor
 
-//@Preview
 @Composable
 fun UserInfoScreen(userLogin: String) {
 
@@ -86,9 +85,7 @@ fun UserInfoScreen(userLogin: String) {
                     "Вы не вошли в аккаунт.",
                     style = CustomTextStyles.body1_regular
                 )
-            }
-
-            else {
+            } else {
                 when {
                     loading -> CircularProgressIndicator()
                     error != null -> Text("Error: $error", color = Color.Red)
@@ -114,7 +111,7 @@ fun UserInfoScreen(userLogin: String) {
         if (userLogin.isEmpty()) {
             val context = LocalContext.current
             Button(
-                onClick = {logout(context)},
+                onClick = { logout(context) },
                 shape = CircleShape,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -134,7 +131,7 @@ fun UserInfoScreen(userLogin: String) {
             }
         } else {
             Button(
-                onClick = {logoutDialogState.value = true},
+                onClick = { logoutDialogState.value = true },
                 shape = CircleShape,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -215,7 +212,8 @@ fun ExitDialog(state: MutableState<Boolean>) {
                                 colors = ButtonDefaults.buttonColors(
                                     contentColor = primary,
                                     containerColor = Color.Transparent
-                                )
+                                ),
+                                elevation = ButtonDefaults.elevatedButtonElevation(4.dp)
                             ) {
                                 Text(
                                     text = "Да",
@@ -229,7 +227,7 @@ fun ExitDialog(state: MutableState<Boolean>) {
                                 colors = ButtonDefaults.buttonColors(
                                     contentColor = primary,
                                     containerColor = Color.Transparent
-                                )
+                                ),
                             ) {
                                 Text(
                                     text = "Нет",

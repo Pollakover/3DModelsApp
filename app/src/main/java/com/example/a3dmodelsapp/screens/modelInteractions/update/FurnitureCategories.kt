@@ -1,18 +1,18 @@
 package com.example.a3dmodelsapp.screens.modelInteractions.update
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -67,7 +67,9 @@ fun FurnitureCategories(
                 "Полки",
                 "Светильники",
                 "Тумбы",
-                "Декор"
+                "Декор",
+                "Посуда",
+                "Ковры"
             )
         ),
 
@@ -79,7 +81,9 @@ fun FurnitureCategories(
                 "Стекло",
                 "Пластик",
                 "Ткань",
-                "Кожа"
+                "Кожа",
+                "Фарфор",
+                "Резина"
             )
         ),
 
@@ -89,7 +93,10 @@ fun FurnitureCategories(
                 "Белый",
                 "Чёрный",
                 "Серый",
-                "Бежевый"
+                "Бежевый",
+                "Синий",
+                "Красный",
+                "Фиолетовый"
             )
         )
     )

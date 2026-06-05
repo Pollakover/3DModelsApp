@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.a3dmodelsapp"
     compileSdk {
-        version = release(36)
+        version = release(37)
     }
 
 //    packaging {
@@ -56,6 +56,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.material)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -66,6 +68,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.graphics)
     implementation(libs.compose.material3)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
