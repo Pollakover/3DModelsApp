@@ -339,10 +339,26 @@ fun MainScreen(
                         rootNavController.navigate("info")
                     },
                     viewModel = mainViewModel,
+                    byUser = false
                 )
             }
-            composable("upload") { UploadScreen(userLogin, mainViewModel, navController) }
-            composable("profile") { UserInfoScreen(userLogin) }
+            composable("upload") {
+                UploadScreen(
+                    userLogin,
+                    mainViewModel,
+                    navController
+                )
+            }
+            composable("profile") {
+                UserInfoScreen(
+                    userLogin,
+                    mainViewModel,
+                    onOpenInfo = {
+                        rootNavController.navigate("info")
+                    },
+                    rootNavController
+                )
+            }
         }
     }
 }

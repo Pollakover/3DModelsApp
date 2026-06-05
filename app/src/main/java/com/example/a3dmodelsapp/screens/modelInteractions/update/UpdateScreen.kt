@@ -326,7 +326,8 @@ fun UpdateScreen(
                         Icon(
                             painter = painterResource(R.drawable.save_24px),
                             contentDescription = "",
-                            tint = backgroundColor
+                            tint = backgroundColor,
+                            modifier = Modifier.size(20.dp),
                         )
                         Text(
                             "Сохранить изменения",

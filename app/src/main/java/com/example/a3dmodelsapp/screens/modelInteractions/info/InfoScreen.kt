@@ -391,7 +391,6 @@ fun InfoScreen(
                             modifier = Modifier.size(20.dp),
                             tint = textColor
                         )
-
                         Text(
                             "Изменить данные",
                             fontFamily = fontFamily,

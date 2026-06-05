@@ -257,8 +257,6 @@ fun LoginScreen(navController: NavController) {
                                     "Войти",
                                     fontFamily = fontFamily,
                                     style = CustomTextStyles.body1_medium,
-                                    modifier = Modifier
-                                        .padding(5.dp)
                                 )
                             }
 

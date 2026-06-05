@@ -296,7 +296,6 @@ fun SignUpScreen(navController: NavController) {
                                 Text(
                                     "Зарегистрироваться",
                                     style = CustomTextStyles.body1_medium,
-                                    modifier = Modifier.padding(5.dp),
                                     fontFamily = fontFamily
                                 )
                             }

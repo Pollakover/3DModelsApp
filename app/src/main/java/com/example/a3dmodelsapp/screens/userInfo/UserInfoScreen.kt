@@ -39,9 +39,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.edit
+import androidx.navigation.NavController
 import androidx.wear.compose.material3.Text
 import com.example.a3dmodelsapp.R
 import com.example.a3dmodelsapp.database.ApiClient
+import com.example.a3dmodelsapp.screens.catalogue.CatalogueScreen
 import com.example.a3dmodelsapp.screens.login.GetUserByLoginRequest
 import com.example.a3dmodelsapp.screens.login.LoginActivity
 import com.example.a3dmodelsapp.screens.login.UserResponse
@@ -51,9 +53,10 @@ import com.example.a3dmodelsapp.ui.theme.fontFamily
 import com.example.a3dmodelsapp.ui.theme.primary
 import com.example.a3dmodelsapp.ui.theme.secondary
 import com.example.a3dmodelsapp.ui.theme.textColor
+import com.example.a3dmodelsapp.viewModels.MainViewModel
 
 @Composable
-fun UserInfoScreen(userLogin: String) {
+fun UserInfoScreen(userLogin: String, viewModel: MainViewModel, onOpenInfo: () -> Unit, rootNavController: NavController) {
 
     var user by remember { mutableStateOf<UserResponse?>(null) }
     var loading by remember { mutableStateOf(true) }
@@ -114,7 +117,8 @@ fun UserInfoScreen(userLogin: String) {
                 onClick = { logout(context) },
                 shape = CircleShape,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                elevation = ButtonDefaults.elevatedButtonElevation(4.dp)
 
             ) {
                 Row(
@@ -145,7 +149,8 @@ fun UserInfoScreen(userLogin: String) {
                     Icon(
                         painter = painterResource(R.drawable.logout_24px),
                         contentDescription = "",
-                        tint = backgroundColor
+                        tint = backgroundColor,
+                        modifier = Modifier.size(20.dp),
                     )
                     Text(
                         "Выйти",
@@ -158,6 +163,21 @@ fun UserInfoScreen(userLogin: String) {
             if (logoutDialogState.value) {
                 ExitDialog(logoutDialogState)
             }
+        }
+
+        if(userLogin.isNotEmpty()) {
+            Text(
+                "Ваши модели:",
+                fontFamily = fontFamily,
+                style = CustomTextStyles.body1_medium,
+            )
+            CatalogueScreen(
+                onOpenInfo = {
+                    rootNavController.navigate("info")
+                },
+                viewModel = viewModel,
+                byUser = true
+            )
         }
     }
 }
@@ -214,7 +234,6 @@ fun ExitDialog(state: MutableState<Boolean>) {
                                     contentColor = primary,
                                     containerColor = Color.Transparent
                                 ),
-                                elevation = ButtonDefaults.elevatedButtonElevation(4.dp)
                             ) {
                                 Text(
                                     text = "Да",
@@ -254,9 +273,9 @@ fun logout(context: Context) {
     context.startActivity(intent)
 }
 
-@Composable
-@Preview
-fun UserInfoScreenPrev() {
-    val userLogin = "3d"
-    UserInfoScreen(userLogin)
-}
+//@Composable
+//@Preview
+//fun UserInfoScreenPrev() {
+//    val userLogin = "3d"
+//    UserInfoScreen(userLogin)
+//}

@@ -98,9 +98,13 @@ fun ModelCard(model: Model, onOpenInfo: () -> Unit, viewModel: MainViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CatalogueScreen(onOpenInfo: () -> Unit, viewModel: MainViewModel) {
+fun CatalogueScreen(onOpenInfo: () -> Unit, viewModel: MainViewModel, byUser: Boolean) {
     val listState = rememberLazyStaggeredGridState()
     val models by viewModel.models.collectAsState()
+    val userModels = models.filter { model ->
+        model.user_login == viewModel.login
+    }
+
     val isLoading by viewModel.isLoading.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.loadModels()
@@ -133,14 +137,22 @@ fun CatalogueScreen(onOpenInfo: () -> Unit, viewModel: MainViewModel) {
         else {
             LazyVerticalStaggeredGrid(
                 state = listState,
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(if (byUser) 0.dp else 20.dp),
                 columns = StaggeredGridCells.Fixed(2),
                 verticalItemSpacing = 20.dp,
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 content = {
-                    items(models) { model ->
-                        ModelCard(model, { onOpenInfo() }, viewModel)
+                    if (byUser) {
+                        items(userModels) { model ->
+                            ModelCard(model, { onOpenInfo() }, viewModel)
+                        }
                     }
+                    else {
+                        items(models) { model ->
+                            ModelCard(model, { onOpenInfo() }, viewModel)
+                        }
+                    }
+
                 }
             )
         }

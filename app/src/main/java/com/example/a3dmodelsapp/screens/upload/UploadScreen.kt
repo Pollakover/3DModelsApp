@@ -523,12 +523,12 @@ fun UploadScreen(userLogin: String, viewModel: MainViewModel, navController: Nav
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
-
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
                 Icon(
                     painter = painterResource(R.drawable.upload_24px),
+                    modifier = Modifier.size(20.dp),
                     contentDescription = "",
                     tint = backgroundColor
                 )
