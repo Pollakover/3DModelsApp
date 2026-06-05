@@ -251,8 +251,7 @@ fun LoginScreen(navController: NavController) {
                                 shape = CircleShape,
                                 modifier = Modifier
                                     .fillMaxWidth(),
-                                colors = ButtonDefaults.buttonColors(
-                                )
+                                elevation = ButtonDefaults.elevatedButtonElevation(4.dp)
                             ) {
                                 Text(
                                     "Войти",

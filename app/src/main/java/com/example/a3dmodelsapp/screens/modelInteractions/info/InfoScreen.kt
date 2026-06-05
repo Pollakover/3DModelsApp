@@ -24,6 +24,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -97,7 +98,9 @@ fun InfoScreen(
                     subtitleContentColor = textColor
                 ),
                 navigationIcon = {
-                    IconButton(onClick = { rootNavController.popBackStack() }) {
+                    IconButton(
+                        onClick = { rootNavController.popBackStack() },
+                    ) {
                         Icon(
                             painterResource(id = R.drawable.arrow_back_24px),
                             contentDescription = "/."
@@ -375,7 +378,6 @@ fun InfoScreen(
                     shape = CircleShape,
                     modifier = Modifier.fillMaxWidth(),
                     border = BorderStroke(1.dp, borderColor),
-                    elevation = ButtonDefaults.elevatedButtonElevation(4.dp)
                 ) {
 
                     Row(

@@ -29,6 +29,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -516,9 +517,8 @@ fun UploadScreen(userLogin: String, viewModel: MainViewModel, navController: Nav
             },
 
             shape = CircleShape,
-
-            modifier = Modifier.fillMaxWidth()
-
+            modifier = Modifier.fillMaxWidth(),
+            elevation = ButtonDefaults.elevatedButtonElevation(4.dp)
         ) {
 
             Row(

@@ -134,7 +134,8 @@ fun UserInfoScreen(userLogin: String) {
                 onClick = { logoutDialogState.value = true },
                 shape = CircleShape,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                elevation = ButtonDefaults.elevatedButtonElevation(4.dp)
 
             ) {
                 Row(

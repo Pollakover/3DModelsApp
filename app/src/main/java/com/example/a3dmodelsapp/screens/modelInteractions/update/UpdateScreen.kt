@@ -25,6 +25,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -341,6 +342,7 @@ fun UpdateScreen(
                 shape = RoundedCornerShape(20.dp),
                 containerColor = primary,
                 contentColor = backgroundColor,
+                elevation = FloatingActionButtonDefaults.elevation(4.dp)
             ) {
                 Icon(
                     painterResource(R.drawable.delete_24px),
