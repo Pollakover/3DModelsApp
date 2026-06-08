@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -120,11 +121,6 @@ fun LoginScreen(navController: NavController) {
                             fontFamily = fontFamily,
                             style = CustomTextStyles.heading_large
                         )
-//                        Text(
-//                            text = "Заполните поля для входа в систему.",
-//                            fontFamily = fontFamily,
-//                            style = CustomTextStyles.body1_regular
-//                        )
                         //Поля ввода
                         Column(
                             modifier = Modifier
@@ -199,6 +195,7 @@ fun LoginScreen(navController: NavController) {
                                 )
 
                                 BasicTextField(
+                                    visualTransformation = PasswordVisualTransformation(),
                                     value = password,
                                     onValueChange = { newText ->
                                         if (newText.length <= 25) {
@@ -320,7 +317,6 @@ fun loginUser(login: String, password: String, context: Context) {
     call.enqueue(object : Callback<AuthResponse> {
         override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
             if (response.isSuccessful) {
-                // Сохраняем только логин пользователя
                 saveUserLogin(context, login)
 
                 val intent = Intent(context, MainActivity::class.java).apply {

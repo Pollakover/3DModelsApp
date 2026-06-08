@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -84,7 +85,6 @@ fun SignUpScreen(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(18.dp),
         ) {
 
-            //Логотип, верхний текст
             Column(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -239,6 +239,7 @@ fun SignUpScreen(navController: NavController) {
                                 )
 
                                 BasicTextField(
+                                    visualTransformation = PasswordVisualTransformation(),
                                     value = password,
                                     onValueChange = { newText ->
                                         if (newText.length <= 25) {
@@ -295,8 +296,8 @@ fun SignUpScreen(navController: NavController) {
                             ) {
                                 Text(
                                     "Зарегистрироваться",
+                                    fontFamily = fontFamily,
                                     style = CustomTextStyles.body1_medium,
-                                    fontFamily = fontFamily
                                 )
                             }
 

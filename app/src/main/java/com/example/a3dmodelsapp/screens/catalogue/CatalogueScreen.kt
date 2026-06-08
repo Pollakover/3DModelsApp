@@ -17,8 +17,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,7 +41,6 @@ import coil.compose.AsyncImage
 import com.example.a3dmodelsapp.R
 import com.example.a3dmodelsapp.database.models.Model
 import com.example.a3dmodelsapp.ui.theme.CustomTextStyles
-import com.example.a3dmodelsapp.ui.theme.borderColor
 import com.example.a3dmodelsapp.ui.theme.fontFamily
 import com.example.a3dmodelsapp.ui.theme.primary
 import com.example.a3dmodelsapp.ui.theme.secondary
@@ -134,6 +131,9 @@ fun CatalogueScreen(onOpenInfo: () -> Unit, viewModel: MainViewModel, byUser: Bo
         if (models.isEmpty() && viewModel.searchButtonState) {
             NoResults()
         }
+        if (userModels.isEmpty() && byUser) {
+            NoModels()
+        }
         else {
             LazyVerticalStaggeredGrid(
                 state = listState,
@@ -185,14 +185,69 @@ fun NoResults() {
                 tint = primary,
                 modifier = Modifier.size(30.dp)
             )
-            Text(
-                "По вашему запросу ничего не найдено",
-                color = textFieldTip,
-                style = CustomTextStyles.body2_regular,
-                textAlign = TextAlign.Center,
-                fontFamily = fontFamily
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    "Ничего не найдено",
+                    color = textColor,
+                    style = CustomTextStyles.body1_semi_bold,
+                    fontFamily = fontFamily
+                )
+                Text(
+                    "По вашему запросу ничего не найдено. Уточните название модели или загрузите её самостоятельно.",
+                    color = textFieldTip,
+                    style = CustomTextStyles.body2_regular,
+                    fontFamily = fontFamily
+                )
+            }
         }
     }
+}
 
+@Composable
+fun NoModels() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = secondary
+        ),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
+
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.upload_24px),
+                contentDescription = "Upload",
+                tint = primary,
+                modifier = Modifier.size(30.dp)
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    "Здесь пока ничего нет",
+                    color = textColor,
+                    style = CustomTextStyles.body1_semi_bold,
+                    fontFamily = fontFamily
+                )
+                Text(
+                    "Чтобы модели отображались в этом списке, загрузите хотя бы одну.",
+                    color = textFieldTip,
+                    style = CustomTextStyles.body2_regular,
+                    fontFamily = fontFamily
+                )
+            }
+        }
+    }
 }

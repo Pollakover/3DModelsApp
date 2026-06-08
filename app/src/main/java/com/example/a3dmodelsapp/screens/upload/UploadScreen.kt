@@ -433,6 +433,7 @@ fun UploadScreen(userLogin: String, viewModel: MainViewModel, navController: Nav
         }
 
         Button(
+            enabled = if (isUploading) false else true,
             onClick = {
                 if (selectedUri == null) {
                     Toast.makeText(
